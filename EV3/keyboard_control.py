@@ -4,13 +4,12 @@ import time
 m1 = ev3.LargeMotor('outA')
 m2 = ev3.LargeMotor('outD')
 
-speed_m1 = 100
-speed_m2 = 100
 go = 0
 turn = 0
 
 while True:
     direction = input()
+    # The recommended speed range is from -900 to 900
     if (direction == 'w' and go < 9):
         go = go + 1
     elif (direction == 's' and go > -9):
