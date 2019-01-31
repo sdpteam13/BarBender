@@ -22,21 +22,19 @@ class Robot():
         self.motorBack.stop()
 
     def straight_line_moving(self, speed = 300):
-        self.motorR.run_forever(speed_sp = speed)
-        self.motorL.run_forever(speed_sp = speed)
+        self.motorR.run_forever(speed_sp = -speed)
+        self.motorL.run_forever(speed_sp = -speed)
         self.motorBack.stop()
 
     def rotate_left(self, speed = 200):
-        self.motorR.stop()
-        self.motorL.stop()
-        self.motorBack.run_forever(speed_sp = speed)
-
-    def rotate_right(self, speed = 200):
-        self.motorR.stop()
-        self.motorL.stop()
+        self.motorR.run_forever(speed_sp = -speed)
+        self.motorL.run_forever(speed_sp = speed)
         self.motorBack.run_forever(speed_sp = -speed)
 
-    # for first deemo these should be enough
+    def rotate_right(self, speed = 200):
+        self.motorR.run_forever(speed_sp = speed)
+        self.motorL.run_forever(speed_sp = -speed)
+        self.motorBack.run_forever(speed_sp = speed)
 
     def line_detected(self):
         #table is about 60, white paper is about 90
