@@ -1,5 +1,5 @@
 import curses
-import robot
+from robot import Robot
 
 # should have same effect as keyboard_control3.py
 def main(win):

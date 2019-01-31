@@ -1,10 +1,12 @@
 import socketserver
 import time
-from robot import Robot
-
-robot = Robot()
+from robot_holo import Robot
 
 class EchoRequestHandler(socketserver.BaseRequestHandler):
+    def __init__(self):
+        self.robot = Robot()
+        self.motor_speed = 100
+        self.status = ' '
 
     def handle(self):
         # Echo the back to the client
@@ -13,11 +15,31 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
         print (st)
         if st == "close":
             self.socket.close()
+            self.robot.stop()
             exit()
-        if st == "w":
-            robot.straight_line_moving()
-        if st == "s":
-            robot.stop()
+
+        if (st == 'r'):
+            # speed up
+            if (self.motor_speed < 900):
+                self.motor_speed += 50
+        elif(st == 'f'):
+            # speed down
+            if (self.motor_speed > 0):
+                self.motor_speed -= 50
+        else:
+            self.status = st
+
+        if (self.status == 'w'):
+            self.robot.straight_line_moving(speed = motor_speed)
+        elif(self.status == 's'):
+            self.robot.straight_line_moving(speed = -motor_speed)
+        elif(self.status == 'a'):
+            self.robot.rotate_left()
+        elif(self.status == 'd'):
+            self.robot.rotate_right()
+        else:
+            self.robot.stop()
+
         self.request.send(data)
         return
 
@@ -34,6 +56,6 @@ if __name__ == '__main__':
     t = threading.Thread(target=server.serve_forever)
     t.setDaemon(True) # don't hang on exit
     t.start()
-    
+
     while True:
         time.sleep(1)
