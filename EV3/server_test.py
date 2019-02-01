@@ -1,6 +1,6 @@
 import socketserver
 import time
-from robot_holo import Robot
+from robot import Robot
 
 class EchoRequestHandler(socketserver.BaseRequestHandler):
     def __init__(self):
@@ -41,13 +41,12 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
             self.robot.stop()
 
         self.request.send(data)
-        return
 
 if __name__ == '__main__':
     import socket
     import threading
 
-    address = ('0.0.0.0', 0) # let the kernel give us a port
+    address = ('0.0.0.0', 12345) # let the kernel give us a port
     server = socketserver.TCPServer(address, EchoRequestHandler)
     ip, port = server.server_address # find out what port we were given
     print ("ip: " + str(ip))

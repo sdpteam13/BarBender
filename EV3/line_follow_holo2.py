@@ -27,16 +27,16 @@ def forward():
 def line_detected():
     #table is about 60, white paper is about 90
     return cs.reflected_light_intensity > 75
-    
-def left_turn(speed, time):
-    m1.run_timed(speed_sp = -speed * 100, time_sp=time)
-    m2.run_timed(speed_sp = speed * 100, time_sp=time)
-    m3.run_timed(speed_sp = -speed * 100, time_sp=time)
 
-def right_turn(speed, time):
-    m1.run_timed(speed_sp = speed * 100, time_sp=time)
-    m2.run_timed(speed_sp = -speed * 100, time_sp=time)
-    m3.run_timed(speed_sp = speed * 100, time_sp=time)
+def left_turn(speed, t):
+    m1.run_timed(speed_sp = -speed * 100, time_sp=t)
+    m2.run_timed(speed_sp = speed * 100, time_sp=t)
+    m3.run_timed(speed_sp = -speed * 100, time_sp=t)
+
+def right_turn(speed, t):
+    m1.run_timed(speed_sp = speed * 100, time_sp=t)
+    m2.run_timed(speed_sp = -speed * 100, time_sp=t)
+    m3.run_timed(speed_sp = speed * 100, time_sp=t)
 
 def find_line(attempts = 0):
     # Determine iteration number
@@ -90,7 +90,7 @@ def find_line(attempts = 0):
 def way_blocked():
     distance = us.value() / 10  # convert mm to cm
     return distance < 6
-    
+
 
 def main():
     while True:
@@ -98,7 +98,7 @@ def main():
             if (not line_detected()):
                 find_line()
             forward()
-            
+
         except Exception as e:
             print(e)
             pass
