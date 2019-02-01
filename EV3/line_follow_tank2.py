@@ -15,7 +15,8 @@ class LineFollower():
     def __init__(self):
         self.robot = Robot()
         self.motortime = 1000
-        self.speed = 2.2
+        self.speed = 5
+        self.turning_direction = 1 #1 = left, 2 = right
 
     def forward(self):
         for i in range(int(self.motortime / 100)):
@@ -24,56 +25,63 @@ class LineFollower():
                 time.sleep(0.2)
                 i = i - 1
             else:
-                self.robot.straight_line_moving(speed = self.speed * 100,duration = 120)
+                self.robot.straight_line_moving(-self.speed * 100, duration = 120)
 
     def left_turn(self, speed, t):
-        self.robot.rotate_left(speed = speed * 100, duration = t)
+        self.robot.rotate_left(speed * 100, duration = t)
 
     def right_turn(self, speed, t):
-        self.robot.rotate_right(speed = speed * 100, duration = t)
-
-    def find_line(self, attempts = 0):
-        # Determine iteration number
-        # If first attempt, set iteration to 3
-        # for minor changes on a straight line
-        if attempts == 0:
-            iterations = 3
-            attempts = 0.5
+        self.robot.rotate_right(speed * 100, duration = t)
+    
+    def turn(self):
+        # Turn for 0.1s and a bit more for smoothness
+        if (self.turning_direction == 1):
+            self.left_turn(self.speed, 160)
         else:
-            iterations = int(attempts * 10)
+            self.right_turn(self.speed, 160)
+    
+    def change_turn_direction(self):
+        if (self.turning_direction == 1):
+            self.turning_direction = 2
+        else:
+            self.turning_direction = 1
 
-        # Turn left first
+    def find_line(self, iterations = 5):
+        # If first attempt, set iteration to 3 for minor changes on a straight line
+        
+        # Turn one way first
         for i in range(iterations):
             while self.robot.way_blocked():
                 self.robot.stop()
             if (self.robot.line_detected()):
-                self.motortime = 1000
                 return
-            self.left_turn(self.speed + 2 * attempts, 120)
+            self.turn()
             time.sleep(0.1)
-
-        # Back to original angle and then turn right
+        
+        # Turn opposite direction, past original angle
+        self.change_turn_direction()
+        
         for i in range(iterations * 2):
             while self.robot.way_blocked():
                 self.robot.stop()
             if (self.robot.line_detected()):
-                self.motortime = 1000
                 return
-            self.right_turn(self.speed + 2 * attempts, 120)
+            self.turn()
             time.sleep(0.1)
-
+        
         # Back to original angle
+        self.change_turn_direction()
+        
         for i in range(iterations):
             while self.robot.way_blocked():
                 self.robot.stop()
             if (self.robot.line_detected()):
-                self.motortime = 1000
                 return
-            self.left_turn(self.speed + 2 * attempts, 120)
+            self.turn()
             time.sleep(0.1)
 
         # Increase search space
-        self.find_line(attempts + 0.5)
+        self.find_line(iterations + 10)
 
 
     def run(self):
