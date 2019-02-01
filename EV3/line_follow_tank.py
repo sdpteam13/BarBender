@@ -8,7 +8,7 @@ cs = ev3.ColorSensor('in4')
 us = ev3.UltrasonicSensor('in2')
 us.mode='US-DIST-CM'
 
-speed = 4
+speed = 5
 motortime = 1000 #ms
 
 def turnright():
@@ -20,15 +20,15 @@ def turnleft():
     m2.run_timed(speed_sp = -speed * 100, time_sp=motortime)
 
 def forward():
-    m1.run_timed(speed_sp = -speed * 100, time_sp=motortime)
-    m2.run_timed(speed_sp = -speed * 100, time_sp=motortime)
+    m1.run_timed(speed_sp = speed * 100, time_sp=motortime)
+    m2.run_timed(speed_sp = speed * 100, time_sp=motortime)
 
 def detect_line():
-    if (cs.reflected_light_intensity > 47): #table is about 60, white paper is about 90
+    if (cs.reflected_light_intensity > 60): #table is about 60, white paper is about 90
         return True
     return False
 
-lookduration = 10
+lookduration = 8
 lookingleft = True #previous/current direction to look
 
 def turn():
@@ -51,8 +51,15 @@ def find_line(attempts = 1):
             return
     #didn't find it on the right, try left
     lookingleft = not lookingleft
+    
     turn()
-    time.sleep(0.1 * attempts * lookduration) #reverse progress from before
+    for i in range(1, attempts * lookduration): #reverse progress from before
+        time.sleep(0.05)
+        if (detect_line()):
+            #found line, exit
+            motortime = 1000 #reset motortime
+            return
+    
     turn() #remind the motors to keep running
     for i in range(1, attempts * lookduration):
         time.sleep(0.05)
@@ -60,6 +67,7 @@ def find_line(attempts = 1):
             #found line, exit
             motortime = 1000 #reset motortime
             return
+    
     #didn't find it, increase sweep
     motortime = (attempts + 1) * 1000 #increase motor time to search longer
     find_line(attempts + 1)
