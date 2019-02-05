@@ -85,9 +85,3 @@ def completed():
         #os.system("wget http://192.168.105.142/EV3/ &")
         #print ("finished!")
 	pass
-
-follow_line_until_intersection()
-turn_right()
-follow_line_until_intersection()
-turn_around()
-follow_line_until_intersection()
