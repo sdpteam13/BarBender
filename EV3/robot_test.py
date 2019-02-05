@@ -17,9 +17,7 @@ def main(win):
         try:
            key = win.getkey()
 
-           win.clear()
-           win.addstr("Detected key:")
-           win.addstr(str(key))
+
 
            if (key == 'r'):
                # speed up
@@ -31,6 +29,12 @@ def main(win):
                    motor_speed -= 50
            else:
                status = key
+
+           win.clear()
+           win.addstr("Speed: ")
+           win.addstr(str(motor_speed))
+           win.addstr("; Detected key:")
+           win.addstr(str(key))
 
            if (status == 'w'):
                robot.straight_line_moving(speed = motor_speed)
