@@ -37,7 +37,7 @@ class Robot():
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorBack.stop()
     
-    def rotate_left(self, speed = 100, duration = -1):
+    def rotate_left(self, speed = 300, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
             self.motorL.run_forever(speed_sp = -speed)
@@ -47,7 +47,7 @@ class Robot():
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorBack.run_timed(speed_sp = 1.2 * -speed, time_sp = duration)
     
-    def rotate_right(self, speed = 100, duration = -1):
+    def rotate_right(self, speed = 300, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = -speed)
             self.motorL.run_forever(speed_sp = speed)
