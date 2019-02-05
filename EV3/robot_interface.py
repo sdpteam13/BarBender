@@ -1,6 +1,5 @@
 import ev3dev.ev3 as ev3
 import time
-import os
 from robot_holo import Robot
 from line_follow_holo3 import LineFollower
 
@@ -9,12 +8,11 @@ lf = LineFollower()
 
 # right angle
 def turn_right(send_completion=True):
-        robot.reset_gyro()
-        robot.rotate_right()
-        while robot.gy.angle < 90:
-         pass
-        robot.stop()
-        completed()
+    robot.reset_gyro()
+    robot.rotate_right()
+    while robot.gy.angle < 90:
+        pass
+    robot.stop()
 
 
 # right angle
@@ -22,29 +20,26 @@ def turn_left():
     robot.reset_gyro()
     robot.rotate_left()
     while robot.gy.angle > -90:
-     pass
+        pass
     robot.stop()
-    completed()
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
 def follow_line_until_intersection():
-        blue_iter = 0
-        iter_threshold = 1
-        while True:
-            if blue_iter == iter_threshold:
-                robot.stop()
-                break
-            elif robot.color_detected('green'):
-                blue_iter += 1
+        found_intersection = False
+        robot.straight_line_moving()
+        while not found_intersection:
+            if robot.color_detected('green'):
+                found_intersection = True
             else:
-                blue_iter = 0
                 if (not robot.line_detected()):
-                    lf.find_line()
-                lf.forward()
-        robot.straight_line_moving(duration = 550)
+                    #may have found intersection
+                    if (robot.color_detected('green')):
+                        found_intersection = True
+                    else:
+                        lf.find_line()
+                        robot.straight_line_moving()
+        robot.straight_line_moving(duration = 550) #move into the intersection
         time.sleep(0.8)
-        robot.stop()
-        completed()
 
 # follows white line (to be replaced by pi vision)
 def follow_line():
@@ -55,8 +50,8 @@ def turn(amount):
 	pass
 
 def stop():
-	motorR.stop()
-	motorL.stop()
+	robot.stop()
+	robot.stop()
 
 # go forward in straight line
 def go():
@@ -78,10 +73,3 @@ def turn_around(direction='right'):
         while robot.gy.angle < 90:
                 pass
         robot.stop()
-        completed()
-
-# send post request to server showing success
-def completed():
-        #os.system("wget http://192.168.105.142/EV3/ &")
-        #print ("finished!")
-	pass
