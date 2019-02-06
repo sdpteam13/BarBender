@@ -17,16 +17,16 @@ class Robot():
         self.us = ev3.UltrasonicSensor('in1')
         self.gy = ev3.GyroSensor('in3')
         self.us.mode='US-DIST-CM'
-    
+
     def reset_gyro(self):
         self.gy.mode = "GYRO-RATE"
         self.gy.mode = "GYRO-ANG" #should reset angle to zero
-    
+
     def stop(self):
         self.motorR.stop()
         self.motorL.stop()
         self.motorBack.stop()
-    
+
     def straight_line_moving(self, speed = 300, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = -speed)
@@ -36,7 +36,7 @@ class Robot():
             self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorBack.stop()
-    
+
     def rotate_left(self, speed = 300, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
@@ -46,7 +46,7 @@ class Robot():
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorBack.run_timed(speed_sp = 1.2 * -speed, time_sp = duration)
-    
+
     def rotate_right(self, speed = 300, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = -speed)
@@ -56,22 +56,32 @@ class Robot():
             self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
             self.motorBack.run_timed(speed_sp = 1.2 * speed, time_sp = duration)
-    
+
     def line_detected(self):
         #table is about 60, white paper is about 90
 	# black is below 10
         return self.cs.reflected_light_intensity > 15
-    
+
     def color_detected(self, c):
         colours = ["none", "black", "blue", "green",
 		"yellow", "red", "white", "brown"]
         print(colours[self.cs.color])
         return colours[self.cs.color] == c
-    
+
     def way_blocked(self):
         distance = self.us.value() / 10  # convert mm to cm
         return distance < 6
-    
-    def rotate_by_degree(self, degrees, time_taken):
-        # TODO: need to related to wheel size
-        pass
+
+    def rotate_by_degree(self, degrees, time_taken=-1):
+        # time_taken need to related to rotation speed, not implement for now
+        self.reset_gyro()
+        # positive degree - right rotation; negetive degree - left rotation
+        if (degree > 0):
+            self.rotate_right()
+            while robot.gy.angle < degree:
+                pass
+        else:
+            self.rotate_left()
+            while robot.gy.angle > degree:
+                pass
+        self.stop()

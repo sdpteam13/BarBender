@@ -20,6 +20,7 @@ class LineFollower():
         self.flag = True
 
     def forward(self):
+        # not used for now, remove?
         for i in range(int(self.motortime / 100)):
             if self.robot.way_blocked():
                 self.robot.stop()
@@ -34,12 +35,12 @@ class LineFollower():
     def right_turn(self, speed, t):
         self.robot.rotate_right(speed * 100, duration = t)
 
-    def turn(self):
+    def turn(self, speed):
         # Turn for 0.1s and a bit more for smoothness
         if (self.turning_direction == 1):
-            self.left_turn(self.speed, 100)
+            self.left_turn(speed, 100)
         else:
-            self.right_turn(self.speed, 100)
+            self.right_turn(speed, 100)
 
     def change_turn_direction(self):
         if (self.turning_direction == 1):
@@ -47,16 +48,19 @@ class LineFollower():
         else:
             self.turning_direction = 1
 
-    def find_line(self, iterations = 3):
+    def target_sensed(self, intersectionColor = "green"):
+        return self.robot.line_detected() or self.robot.color_detected(intersectionColor)
+
+    def find_line(self, iterations = 3, intersectionColor = "green"):
         # If first attempt, set iteration to 3 for minor changes on a straight line
 
         # Turn one way first
         for i in range(iterations):
             while self.robot.way_blocked():
                 self.robot.stop()
-            if (self.robot.line_detected()):
+            if self.target_sensed(intersectionColor):
                 return
-            self.turn()
+            self.turn(self.speed)
             time.sleep(0.1)
 
         # Turn opposite direction, past original angle
@@ -65,9 +69,9 @@ class LineFollower():
         for i in range(iterations * 2):
             while self.robot.way_blocked():
                 self.robot.stop()
-            if (self.robot.line_detected()):
+            if self.target_sensed(intersectionColor):
                 return
-            self.turn()
+            self.turn(self.speed)
             time.sleep(0.1)
 
         # Back to original angle
@@ -76,13 +80,13 @@ class LineFollower():
         for i in range(iterations):
             while self.robot.way_blocked():
                 self.robot.stop()
-            if (self.robot.line_detected()):
+            if self.target_sensed(intersectionColor):
                 return
-            self.turn()
+            self.turn(self.speed)
             time.sleep(0.1)
 
         # Increase search space
-        self.find_line(iterations + 5)
+        self.find_line(iterations + 2)
 
 
     def run(self):
