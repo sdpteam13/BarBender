@@ -62,17 +62,17 @@ class Robot():
 
     def way_blocked(self):
         distance = self.us.value() / 10  # convert mm to cm
-        return distance < 6
+        return distance < 6 or distance > 250
 
     def rotate_by_degree(self, degrees, time_taken = -1):
         # time_taken need to related to rotation speed, not implement for now
         self.reset_gyro()
-        if (degree > 0):
+        if (degrees > 0):
             self.rotate_right()
-            while robot.gy.angle < degree:
+            while self.gy.angle < degrees:
                 pass
         else:
             self.rotate_left()
-            while robot.gy.angle > degree:
+            while self.gy.angle > degrees:
                 pass
         self.stop()

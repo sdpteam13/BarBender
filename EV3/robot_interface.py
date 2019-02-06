@@ -8,12 +8,12 @@ lf = LineFollower()
 
 # right angle
 def turn_right(send_completion=True):
-    rotate_by_degree(self, degrees = 90)
+    robot.rotate_by_degree(degrees = 90)
 
 
 # right angle
 def turn_left():
-    rotate_by_degree(self, degrees = -90)
+    robot.rotate_by_degree(degrees = -90)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
 def follow_line_until_intersection():
@@ -30,6 +30,13 @@ def follow_line_until_intersection():
                     else:
                         lf.find_line()
                         robot.straight_line_moving()
+
+            if robot.way_blocked():
+                robot.stop()
+                time.sleep(0.2)
+            else:
+                robot.straight_line_moving()
+
         robot.straight_line_moving(duration = 550) #move into the intersection
         time.sleep(0.8)
 
@@ -56,6 +63,6 @@ def set_speed(x):
 # 180 degree turn
 def turn_around(direction='right'):
     if (direction == 'right'):
-        rotate_by_degree(self, degrees = 180)
+        robot.rotate_by_degree(degrees = 180)
     else:
-        rotate_by_degree(self, degrees = -180)
+        robot.rotate_by_degree(degrees = -180)

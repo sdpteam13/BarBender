@@ -59,29 +59,30 @@ class Robot():
 
     def line_detected(self):
         #table is about 60, white paper is about 90
-	# black is below 10
+	    # black is below 10
         return self.cs.reflected_light_intensity > 15
 
     def color_detected(self, c):
         colours = ["none", "black", "blue", "green",
 		"yellow", "red", "white", "brown"]
-        print(colours[self.cs.color])
+        #print(colours[self.cs.color])
         return colours[self.cs.color] == c
 
     def way_blocked(self):
         distance = self.us.value() / 10  # convert mm to cm
-        return distance < 6
+        print(distance)
+        return distance < 6 or distance > 250
 
     def rotate_by_degree(self, degrees, time_taken=-1):
         # time_taken need to related to rotation speed, not implement for now
         self.reset_gyro()
         # positive degree - right rotation; negetive degree - left rotation
-        if (degree > 0):
+        if (degrees > 0):
             self.rotate_right()
-            while robot.gy.angle < degree:
+            while self.gy.angle < degrees:
                 pass
         else:
             self.rotate_left()
-            while robot.gy.angle > degree:
+            while self.gy.angle > degrees:
                 pass
         self.stop()
