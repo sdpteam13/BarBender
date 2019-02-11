@@ -1,7 +1,7 @@
 import ev3dev.ev3 as ev3
 import time
-from robot_holo import Robot
-from line_follow_holo3 import LineFollower
+from robot_holo_3_sensor import Robot
+from line_follow_3_sensor import LineFollower
 
 robot = Robot()
 lf = LineFollower()
@@ -23,19 +23,21 @@ def follow_line_until_intersection():
             if robot.color_detected('green'):
                 found_intersection = True
             else:
-                if (not robot.line_detected()):
-                    #may have found intersection
-                    if (robot.color_detected('green')):
-                        found_intersection = True
-                    else:
-                        lf.find_line()
-                        robot.straight_line_moving()
+                #if (not robot.line_detected()):
+                #    #may have found intersection
+                #    if (robot.color_detected('green')):
+                #        found_intersection = True
+                #    else:
+                #        lf.find_line()
+                #        robot.straight_line_moving()
 
-            if robot.way_blocked():
-                robot.stop()
-                time.sleep(0.2)
-            else:
-                robot.straight_line_moving()
+                lf.iteration()
+
+            #if robot.way_blocked():
+            #    robot.stop()
+            #    time.sleep(0.2)
+            #else:
+            #    robot.straight_line_moving()
 
         robot.straight_line_moving(duration = 550) #move into the intersection
         time.sleep(0.8)
