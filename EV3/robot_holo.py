@@ -59,6 +59,26 @@ class Robot():
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
             self.motorBack.run_timed(speed_sp = 1.2 * speed, time_sp = duration)
 
+    def steer_right(self, speed = 300, speed_back = 100, duration = -1):
+        if (duration < 0):
+            self.motorR.run_forever(speed_sp = -speed)
+            self.motorL.run_forever(speed_sp = -0.5*speed)
+            self.motorBack.run_forever(speed_sp = speed_back)
+        else:
+            self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = -0.5*speed, time_sp = duration)
+            self.motorBack.run_timed(speed_sp = speed_back, time_sp = duration)
+
+    def steer_left(self, speed = 300, speed_back = 100, duration = -1):
+        if (duration < 0):
+            self.motorR.run_forever(speed_sp = -0.5*speed)
+            self.motorL.run_forever(speed_sp = -speed)
+            self.motorBack.run_forever(speed_sp = -speed_back)
+        else:
+            self.motorR.run_timed(speed_sp = -0.5*speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
+            self.motorBack.run_timed(speed_sp = -speed_back, time_sp = duration)
+
     def line_detected(self):
         return self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()
 
@@ -77,23 +97,23 @@ class Robot():
         colours = ["none", "black", "blue", "green",
 		"yellow", "red", "white", "brown"]
         #print(colours[self.csM.color])
-        return colours[self.csR.color] == c or colours[self.csL.color] == c
+        return colours[self.csR.color] == c or colours[self.csL.color] == c or colours[self.csM.color] == c
 
     def way_blocked(self):
     #    distance = self.us.value() / 10  # convert mm to cm
     #    print(distance)
         return False #distance < 6 or distance > 250
 
-    def rotate_by_degree(self, degrees, time_taken=-1):
+    def rotate_by_degree(self, degrees, time_taken=-1, speed = 300):
         # time_taken need to related to rotation speed, not implement for now
         self.reset_gyro()
         # positive degree - right rotation; negetive degree - left rotation
         if (degrees > 0):
-            self.rotate_right()
+            self.rotate_right(speed)
             while self.gy.angle < degrees:
                 pass
         else:
-            self.rotate_left()
+            self.rotate_left(speed)
             while self.gy.angle > degrees:
                 pass
         self.stop()

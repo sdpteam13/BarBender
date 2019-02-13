@@ -104,9 +104,11 @@ class LineFollower():
         elif (self.robot.line_detected_left()):
             print("left")
             self.robot.rotate_left(200)
+            #self.robot.steer_left()
         elif (self.robot.line_detected_right()):
             print("right")
             self.robot.rotate_right(200)
+            #self.robot.steer_right()
         else:
             # shouldn't be triggered
             pass

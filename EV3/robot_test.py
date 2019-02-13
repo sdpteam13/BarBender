@@ -1,5 +1,5 @@
 import curses
-from robot_holo_3_sensor import Robot
+from robot_holo import Robot
 # can use: "from robot import Robot" if using track version
 
 # should have same effect as keyboard_control3.py
@@ -44,6 +44,10 @@ def main(win):
                robot.rotate_left()
            elif(status == 'd'):
                robot.rotate_right()
+           elif(status == 'q'):
+               robot.steer_left()
+           elif(status == 'e'):
+               robot.steer_right()
            else:
                robot.stop()
 

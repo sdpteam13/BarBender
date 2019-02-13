@@ -68,3 +68,6 @@ def turn_around(direction='right'):
         robot.rotate_by_degree(degrees = 180)
     else:
         robot.rotate_by_degree(degrees = -180)
+
+def dance():
+    robot.rotate_by_degree(degrees = 360)
