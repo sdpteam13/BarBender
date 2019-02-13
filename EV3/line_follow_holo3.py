@@ -19,15 +19,15 @@ class LineFollower():
         self.turning_direction = 1 #1 = left, 2 = right
         self.flag = True
 
-    def forward(self):
-        # not used for now, remove?
-        for i in range(int(self.motortime / 100)):
-            if self.robot.way_blocked():
-                self.robot.stop()
-                time.sleep(0.2)
-                i = i - 1
-            else:
-                self.robot.straight_line_moving(self.speed * 100, duration = 120)
+    #def forward(self):
+    #    # not used for now, remove?
+    #    for i in range(int(self.motortime / 100)):
+    #        if self.robot.way_blocked():
+    #            self.robot.stop()
+    #            time.sleep(0.2)
+    #            i = i - 1
+    #        else:
+    #            self.robot.straight_line_moving(self.speed * 100, duration = 120)
 
     def left_turn(self, speed, t):
         self.robot.rotate_left(speed * 100, duration = t)
@@ -50,6 +50,7 @@ class LineFollower():
 
     def target_sensed(self, intersectionColor = "green"):
         return self.robot.line_detected() or self.robot.color_detected(intersectionColor)
+        #return self.robot.line_detected();
 
     def find_line(self, iterations = 3, intersectionColor = "green"):
         # If first attempt, set iteration to 3 for minor changes on a straight line
@@ -88,20 +89,35 @@ class LineFollower():
         # Increase search space
         self.find_line(iterations + 2)
 
+    def iteration(self):
+
+        if (self.robot.way_blocked()):
+            self.robot.stop()
+            return
+
+        if (not self.robot.line_detected()):
+            print("unfind")
+            self.find_line()
+        elif (self.robot.line_detected_middle()):
+            print("middle")
+            self.robot.straight_line_moving()
+        elif (self.robot.line_detected_left()):
+            print("left")
+            self.robot.rotate_left(200)
+        elif (self.robot.line_detected_right()):
+            print("right")
+            self.robot.rotate_right(200)
+        else:
+            # shouldn't be triggered
+            pass
 
     def run(self):
         while True:
             try:
-                if (not self.robot.line_detected()):
-                    self.find_line()
-                self.forward()
-
+                self.iteration()
             except Exception as e:
                 print(e)
                 pass
 
-    def stop(self):
-        self.flag = False
-
-#lineFollower = LineFollower()
-#lineFollower.run()
+#lf = LineFollower()
+#lf.run()

@@ -1,7 +1,7 @@
 import ev3dev.ev3 as ev3
 import time
-from robot_holo_3_sensor import Robot
-from line_follow_3_sensor import LineFollower
+from robot_holo import Robot
+from line_follow_holo3 import LineFollower
 
 robot = Robot()
 lf = LineFollower()
