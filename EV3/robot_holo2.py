@@ -13,6 +13,20 @@ class Robot():
         self.motorR = ev3.LargeMotor('outA')
         self.motorL = ev3.LargeMotor('outD')
 
+        self.port = ev3.LegoPort('outB')
+        assert self.port.connected
+        self.port.mode = 'dc-motor'
+        time.sleep(5)
+        self.motorGrabber = ev3.DcMotor("outB")
+
+
+    def test_motorGrabber(self):
+        self.motorGrabber.run_timed(duty_cycle_sp = -100, time_sp=100)
+        while(True):
+            print(self.motorGrabber.state)
+            #if (self.motorGrabber.duty_cycle > -20):
+            #    self.motorGrabber.stop()
+
     def reset_gyro(self):
         #self.gy.mode = "GYRO-RATE"
         #self.gy.mode = "GYRO-ANG" #should reset angle to zero
@@ -107,3 +121,6 @@ class Robot():
         #        pass
         #self.stop()
         pass
+
+#r = Robot()
+#r.test_motorGrabber()
