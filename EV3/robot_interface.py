@@ -8,11 +8,13 @@ lf = LineFollower()
 
 # right angle
 def turn_right(send_completion=True):
+    #robot.rotate_right_until_detected()
     robot.rotate_by_degree(degrees = 90)
 
 
 # right angle
 def turn_left():
+    #robot.rotate_left_until_detected()
     robot.rotate_by_degree(degrees = -90)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
@@ -52,7 +54,6 @@ def turn(amount):
 
 def stop():
 	robot.stop()
-	robot.stop()
 
 # go forward in straight line
 def go():
@@ -66,8 +67,12 @@ def set_speed(x):
 def turn_around(direction='right'):
     if (direction == 'right'):
         robot.rotate_by_degree(degrees = 180)
+        #robot.rotate_by_degree(degrees = 90)
+        #robot.rotate_right_until_detected()
     else:
         robot.rotate_by_degree(degrees = -180)
+        #robot.rotate_by_degree(degrees = -90)
+        #robot.rotate_left_until_detected()
 
 def dance():
     robot.rotate_by_degree(degrees = 360)

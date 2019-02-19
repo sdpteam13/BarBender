@@ -18,6 +18,9 @@ class LineFollower():
         self.speed = 3
         self.turning_direction = 1 #1 = left, 2 = right
         self.flag = True
+        self.offline = 0
+        self.left_adjust = 0
+        self.right_adjust = 0
 
     #def forward(self):
     #    # not used for now, remove?
@@ -90,24 +93,28 @@ class LineFollower():
         self.find_line(iterations + 2)
 
     def iteration(self):
-
         if (self.robot.way_blocked()):
             self.robot.stop()
             return
 
         if (not self.robot.line_detected()):
-            print("unfind")
+            self.offline = self.offline + 1
+            print("unfind", self.offline)
             self.find_line()
         elif (self.robot.line_detected_middle()):
-            print("middle")
             self.robot.straight_line_moving()
+        # else:
+        #     print(self.robot.gy.angle)
+        #     self.robot.steer_by_degree(degrees = -self.robot.gy.angle)
         elif (self.robot.line_detected_left()):
-            print("left")
-            self.robot.rotate_left(200)
+            self.left_adjust = self.left_adjust + 1
+            print("left adjust", self.left_adjust)
+            self.robot.rotate_left(300)
             #self.robot.steer_left()
         elif (self.robot.line_detected_right()):
-            print("right")
-            self.robot.rotate_right(200)
+            self.right_adjust = self.right_adjust + 1
+            print("right adjust", self.right_adjust)
+            self.robot.rotate_right(300)
             #self.robot.steer_right()
         else:
             # shouldn't be triggered
