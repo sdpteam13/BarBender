@@ -55,17 +55,17 @@ class Robot():
     def steer_left(self, speed = 500, speed_back = 150, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
-            self.motorL.run_forever(speed_sp = 0.3*speed)
+            self.motorL.run_forever(speed_sp = 0.7*speed)
         else:
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
-            self.motorL.run_timed(speed_sp = 0.3*speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = 0.7*speed, time_sp = duration)
 
     def steer_right(self, speed = 500, speed_back = 150, duration = -1):
         if (duration < 0):
-            self.motorR.run_forever(speed_sp = 0.3*speed)
+            self.motorR.run_forever(speed_sp = 0.7*speed)
             self.motorL.run_forever(speed_sp = speed)
         else:
-            self.motorR.run_timed(speed_sp = 0.3*speed, time_sp = duration)
+            self.motorR.run_timed(speed_sp = 0.7*speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
 
     def line_detected(self):

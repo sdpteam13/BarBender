@@ -113,12 +113,12 @@ class LineFollower():
             self.left_adjust = self.left_adjust + 1
             print("left adjust", self.left_adjust)
             #self.robot.rotate_left(80)
-            self.robot.steer_left(200)
+            self.robot.steer_left(350)
         elif (detected_R):
             self.right_adjust = self.right_adjust + 1
             print("right adjust", self.right_adjust)
             #self.robot.rotate_right(80)
-            self.robot.steer_right(200)
+            self.robot.steer_right(350)
         elif (detected_M):
             self.robot.straight_line_moving()
 
