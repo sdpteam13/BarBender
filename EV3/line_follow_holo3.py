@@ -1,6 +1,6 @@
 import ev3dev.ev3 as ev3
 import time
-from robot_holo import Robot
+from robot_holo2  import Robot
 
 # based on line_follow_holo2.py
 # more object-oriented
@@ -15,7 +15,7 @@ class LineFollower():
     def __init__(self):
         self.robot = Robot()
         self.motortime = 1000
-        self.speed = 3
+        self.speed = 2.5
         self.turning_direction = 1 #1 = left, 2 = right
         self.flag = True
         self.offline = 0
@@ -97,25 +97,31 @@ class LineFollower():
             self.robot.stop()
             return
 
-        if (not self.robot.line_detected()):
+        detected_R = self.robot.line_detected_right()
+        detected_M = self.robot.line_detected_middle()
+        detected_L = self.robot.line_detected_left()
+
+        if (not (detected_R or detected_M or detected_L)):
             self.offline = self.offline + 1
             print("unfind", self.offline)
             self.find_line()
-        elif (self.robot.line_detected_middle()):
-            self.robot.straight_line_moving()
+
         # else:
         #     print(self.robot.gy.angle)
         #     self.robot.steer_by_degree(degrees = -self.robot.gy.angle)
-        elif (self.robot.line_detected_left()):
+        elif (detected_L):
             self.left_adjust = self.left_adjust + 1
             print("left adjust", self.left_adjust)
-            self.robot.rotate_left(300)
-            #self.robot.steer_left()
-        elif (self.robot.line_detected_right()):
+            #self.robot.rotate_left(80)
+            self.robot.steer_left(200)
+        elif (detected_R):
             self.right_adjust = self.right_adjust + 1
             print("right adjust", self.right_adjust)
-            self.robot.rotate_right(300)
-            #self.robot.steer_right()
+            #self.robot.rotate_right(80)
+            self.robot.steer_right(200)
+        elif (detected_M):
+            self.robot.straight_line_moving()
+
         else:
             # shouldn't be triggered
             pass

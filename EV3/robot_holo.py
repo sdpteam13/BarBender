@@ -98,8 +98,8 @@ class Robot():
         colours = ["none", "black", "blue", "green",
 		"yellow", "red", "white", "brown"]
         #print(colours[self.csM.color])
-        return colours[self.csR.color] == c or colours[self.csL.color] == c or colours[self.csM.color] == c
-        #return colours[self.csM.color] == c
+        #return colours[self.csR.color] == c or colours[self.csL.color] == c or colours[self.csM.color] == c
+        return colours[self.csM.color] == c
 
     def way_blocked(self):
     #    distance = self.us.value() / 10  # convert mm to cm
@@ -118,14 +118,14 @@ class Robot():
             self.rotate_left(speed)
             while self.gy.angle > degrees:
                 pass
-        self.stop()
+        #self.stop()
         self.reset_gyro()
 
     def rotate_left_until_detected(self, speed = 300):
         self.rotate_by_degree(-45)
         while (not self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()):
             self.rotate_left(speed)
-        self.stop()
+        #self.stop()
         self.reset_gyro()
 
 
@@ -133,7 +133,7 @@ class Robot():
         self.rotate_by_degree(45)
         while (not self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()):
             self.rotate_right(speed)
-        self.stop()
+        #self.stop()
         self.reset_gyro()
 
 

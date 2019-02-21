@@ -1,6 +1,6 @@
 import ev3dev.ev3 as ev3
 import time
-from robot_holo import Robot
+from robot_holo2 import Robot
 from line_follow_holo3 import LineFollower
 
 robot = Robot()
@@ -8,14 +8,16 @@ lf = LineFollower()
 
 # right angle
 def turn_right(send_completion=True):
-    #robot.rotate_right_until_detected()
-    robot.rotate_by_degree(degrees = 90)
+    robot.rotate_right_until_detected()
+    robot.stop()
+    #robot.rotate_by_degree(degrees = 85)
 
 
 # right angle
 def turn_left():
-    #robot.rotate_left_until_detected()
-    robot.rotate_by_degree(degrees = -90)
+    robot.rotate_left_until_detected()
+    robot.stop()
+    #robot.rotate_by_degree(degrees = -85)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
 def follow_line_until_intersection():
@@ -41,8 +43,18 @@ def follow_line_until_intersection():
             #else:
             #    robot.straight_line_moving()
 
-        robot.straight_line_moving(duration = 550) #move into the intersection
-        time.sleep(0.8)
+
+        start = time.time()
+        print("hello")
+        end = time.time()
+        sp = 300
+        while (sp - 150 * (end - start) > 80):
+            robot.straight_line_moving(speed = sp - 150 * (end - start)) #move into the intersection
+            print(sp - 150 * (end - start))
+            end = time.time()
+
+        robot.straight_line_moving(speed = 80, duration = 1000)
+        time.sleep(2)
 
 # follows white line (to be replaced by pi vision)
 def follow_line():
@@ -66,13 +78,16 @@ def set_speed(x):
 # 180 degree turn
 def turn_around(direction='right'):
     if (direction == 'right'):
-        robot.rotate_by_degree(degrees = 180)
-        #robot.rotate_by_degree(degrees = 90)
-        #robot.rotate_right_until_detected()
+        #robot.rotate_by_degree(degrees = 180)
+        robot.rotate_by_degree(degrees = 90)
+        robot.rotate_right_until_detected()
+        robot.stop()
     else:
-        robot.rotate_by_degree(degrees = -180)
-        #robot.rotate_by_degree(degrees = -90)
-        #robot.rotate_left_until_detected()
+        #robot.rotate_by_degree(degrees = -180)
+        robot.rotate_by_degree(degrees = -90)
+        robot.rotate_left_until_detected()
+        robot.stop()
 
 def dance():
-    robot.rotate_by_degree(degrees = 360)
+    #robot.rotate_by_degree(degrees = 360)
+    pass
