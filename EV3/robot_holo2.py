@@ -15,10 +15,11 @@ class Robot():
         self.csR = ev3.ColorSensor('in2')
         self.csM = ev3.ColorSensor('in3')
         self.csL = ev3.ColorSensor('in4')
-        #self.us = ev3.UltrasonicSensor('in1')
+
+        self.grabberArms = ev3.MediumMotor('outC')
+        self.grabberLift = ev3.MediumMotor('outB')
         self.gy = ev3.GyroSensor('in1')
         self.reset_gyro()
-        #self.us.mode='US-DIST-CM'
 
     def reset_gyro(self):
         self.gy.mode = "GYRO-RATE"
@@ -55,17 +56,17 @@ class Robot():
     def steer_left(self, speed = 500, speed_back = 150, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
-            self.motorL.run_forever(speed_sp = 0.7*speed)
+            self.motorL.run_forever(speed_sp = 0.3*speed)
         else:
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
-            self.motorL.run_timed(speed_sp = 0.7*speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = 0.3*speed, time_sp = duration)
 
     def steer_right(self, speed = 500, speed_back = 150, duration = -1):
         if (duration < 0):
-            self.motorR.run_forever(speed_sp = 0.7*speed)
+            self.motorR.run_forever(speed_sp = 0.3*speed)
             self.motorL.run_forever(speed_sp = speed)
         else:
-            self.motorR.run_timed(speed_sp = 0.7*speed, time_sp = duration)
+            self.motorR.run_timed(speed_sp = 0.3*speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
 
     def line_detected(self):
@@ -139,3 +140,16 @@ class Robot():
                 pass
         #self.stop()
         self.reset_gyro()
+
+    def close_grabber(self):
+        pass
+    def open_grabber(self):
+        pass
+    
+    def lift_grabber(self):
+        self.grabberLift.run_timed(speed_sp = 300, time_sp = 1000)
+        time.sleep(1)
+
+    def lower_grabber(self):
+        self.grabberLift.run_timed(speed_sp = 300, time_sp = 1000)
+        time.sleep(1)
