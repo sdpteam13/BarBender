@@ -56,8 +56,7 @@ def follow_line_until_intersection():
         robot.straight_line_moving(speed = 80, duration = 1000)
         time.sleep(2)
 
-# follows white line (to be replaced by pi vision)
-def follow_line():
+# follows white line
 	pass
 
 # between -1 and 1, -1 is turn left, 1 is turn right
@@ -87,6 +86,20 @@ def turn_around(direction='right'):
         robot.rotate_by_degree(degrees = -90)
         robot.rotate_left_until_detected()
         robot.stop()
+
+def grab_cup():
+    """
+    After reaching an intersection (intersection A), the robot should then turn around and slowly approach the cup.
+    After the robot reaches the cup it should grab the cup and lift it off the ground
+    The robot should then go forwards towards intersection A and stop when it reaches the intersection
+    """
+    pass
+
+def drop_cup():
+    """
+    After reaching an intersection, the robot should turn around, mvoe backwards, drop the cup and finally move forwards until it reaches the intersection again
+    """
+    pass
 
 def dance():
     #robot.rotate_by_degree(degrees = 360)
