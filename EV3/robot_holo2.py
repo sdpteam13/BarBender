@@ -16,7 +16,9 @@ class Robot():
         self.csM = ev3.ColorSensor('in3')
         self.csL = ev3.ColorSensor('in4')
 
-        self.grabberArms = ev3.MediumMotor('outC')
+
+        #TODO: implement using the DC motor if need
+        #self.grabberArms = ev3.MediumMotor('outC')
         self.grabberLift = ev3.MediumMotor('outB')
         self.gy = ev3.GyroSensor('in1')
         self.reset_gyro()
@@ -141,15 +143,34 @@ class Robot():
         #self.stop()
         self.reset_gyro()
 
-    def close_grabber(self):
-        pass
-    def open_grabber(self):
-        pass
-    
-    def lift_grabber(self):
-        self.grabberLift.run_timed(speed_sp = 300, time_sp = 1000)
-        time.sleep(1)
+    def close_grabber(self, speed = 50):
+        while (not self.grabberArms.is_overloaded):
+            self.grabberArms.run_forever(speed_sp = speed)
+        self.grabberArms.stop()
 
-    def lower_grabber(self):
-        self.grabberLift.run_timed(speed_sp = 300, time_sp = 1000)
-        time.sleep(1)
+    def open_grabber(self, speed = 50):
+        while (not self.grabberArms.is_overloaded):
+             self.grabberArms.run_forever(speed_sp = -speed)
+        self.grabberArms.stop()
+
+    def lift_up(self, speed = 200, time = 100):
+        # while (not self.grabberLift.is_overloaded):
+        #      self.grabberLift.run_forever(speed_sp = speed)
+        # self.grabberLift.stop()
+        self.grabberLift.run_timed(speed_sp = speed, time_sp = time)
+        time.sleep(0.3)
+        self.grabberLift.stop()
+
+    def lift_down(self, speed = 200,  time = 100):
+        # while (not self.grabberLift.is_overloaded):
+        #     self.grabberLift.run_forever(speed_sp = -speed)
+        # self.grabberLift.stop()
+        self.grabberLift.run_timed(speed_sp = -speed, time_sp = time)
+        time.sleep(0.3)
+        self.grabberLift.stop()
+
+    def stop_grabber(self):
+        self.grabberArms.stop()
+
+    def stop_lift(self):
+        self.grabberLift.stop()

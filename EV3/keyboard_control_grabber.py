@@ -1,21 +1,14 @@
 import curses
 import ev3dev.ev3 as ev3
-import time
-
-hand = ev3.MediumMotor('outA')
-arm = ev3.MediumMotor('outD')
+from robot_holo2 import Robot
 
 def main(win):
     win.nodelay(True)
     key=""
     status = " "
-    while 1:
-        if (arm.is_overloaded or hand.is_overloaded):
-            #state = " "
-            #hand.stop()
-            #arm.stop()
-            pass
+    robot = Robot()
 
+    while 1:
         try:
            key = win.getkey()
            win.clear()
@@ -25,16 +18,16 @@ def main(win):
            status = key
 
            if (status == 'q'):
-               arm.run_forever(speed_sp = 100)
+               robot.lift_up()
            elif(status == 'a'):
-               arm.run_forever(speed_sp = -100)
+               robot.lift_down()
            elif(status == 'w'):
-               hand.run_forever(speed_sp = 50)
+               robot.open_grabber()
            elif(status == 's'):
-               hand.run_forever(speed_sp = -50)
+               robot.close_grabber()
            else:
-               hand.stop()
-               arm.stop()
+               robot.stop_grabber()
+               robot.stop_lift()
 
         except Exception as e:
            # No input

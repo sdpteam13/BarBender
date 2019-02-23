@@ -1,5 +1,5 @@
 import curses
-from robot_holo import Robot
+from robot_holo2 import Robot
 # can use: "from robot import Robot" if using track version
 
 # should have same effect as keyboard_control3.py
