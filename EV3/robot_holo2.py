@@ -19,6 +19,13 @@ class Robot():
 
         #TODO: implement using the DC motor if need
         #self.grabberArms = ev3.MediumMotor('outC')
+        self.port = ev3.LegoPort('outC')
+        assert self.port.connected
+        self.port.mode = 'dc-motor'
+        time.sleep(5)
+        self.grabberArms = ev3.DcMotor("outC")
+        print("DcMotor connected")
+
         self.grabberLift = ev3.MediumMotor('outB')
         self.gy = ev3.GyroSensor('in1')
         self.reset_gyro()
@@ -143,31 +150,29 @@ class Robot():
         #self.stop()
         self.reset_gyro()
 
-    def close_grabber(self, speed = 50):
-        while (not self.grabberArms.is_overloaded):
-            self.grabberArms.run_forever(speed_sp = speed)
-        self.grabberArms.stop()
+    def close_grabber(self):
+        # while (not self.grabberArms.is_overloaded):
+        #     self.grabberArms.run_forever(speed_sp = speed)
+        # self.grabberArms.stop()
+        self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp=300)
 
-    def open_grabber(self, speed = 50):
-        while (not self.grabberArms.is_overloaded):
-             self.grabberArms.run_forever(speed_sp = -speed)
-        self.grabberArms.stop()
+    def open_grabber(self):
+        # while (not self.grabberArms.is_overloaded):
+        #      self.grabberArms.run_forever(speed_sp = -speed)
+        # self.grabberArms.stop()
+        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp= 300)
 
-    def lift_up(self, speed = 200, time = 100):
+    def lift_up(self, speed = 200, time = 1200):
         # while (not self.grabberLift.is_overloaded):
         #      self.grabberLift.run_forever(speed_sp = speed)
         # self.grabberLift.stop()
         self.grabberLift.run_timed(speed_sp = speed, time_sp = time)
-        time.sleep(0.3)
-        self.grabberLift.stop()
 
-    def lift_down(self, speed = 200,  time = 100):
+    def lift_down(self, speed = 100,  time = 1200):
         # while (not self.grabberLift.is_overloaded):
         #     self.grabberLift.run_forever(speed_sp = -speed)
         # self.grabberLift.stop()
         self.grabberLift.run_timed(speed_sp = -speed, time_sp = time)
-        time.sleep(0.3)
-        self.grabberLift.stop()
 
     def stop_grabber(self):
         self.grabberArms.stop()
