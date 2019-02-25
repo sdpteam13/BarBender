@@ -89,9 +89,8 @@ def turn_around(direction='right'):
 
 def grab_cup():
     """
-    After reaching an intersection (intersection A), the robot should then turn around and slowly approach the cup.
-    After the robot reaches the cup it should grab the cup and lift it off the ground
-    The robot should then go forwards towards intersection A and stop when it reaches the intersection
+    After reaching the cup intersection, the robot should turn around and go backwards until it reaches he intersection again,
+    the robot should then pickup a cup, go backwards  a short distance and then turn around.
     """
     pass
 
