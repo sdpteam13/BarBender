@@ -15,20 +15,21 @@ class Robot():
         self.csR = ev3.ColorSensor('in2')
         self.csM = ev3.ColorSensor('in3')
         self.csL = ev3.ColorSensor('in4')
-
-
+        
+        
         #TODO: implement using the DC motor if need
         #self.grabberArms = ev3.MediumMotor('outC')
-        self.port = ev3.LegoPort('outC')
+        self.port = ev3.LegoPort('outB')
         assert self.port.connected
         self.port.mode = 'dc-motor'
         time.sleep(5)
-        self.grabberArms = ev3.DcMotor("outC")
+        self.grabberArms = ev3.DcMotor("outB")
         print("DcMotor connected")
 
-        self.grabberLift = ev3.MediumMotor('outB')
+        self.grabberLift = ev3.MediumMotor('outC')
         self.gy = ev3.GyroSensor('in1')
         self.reset_gyro()
+        self.base_pos = self.grabberLift.position
 
     def reset_gyro(self):
         self.gy.mode = "GYRO-RATE"
@@ -48,35 +49,35 @@ class Robot():
 
     def rotate_right(self, speed = 80, duration = -1):
         if (duration < 0):
-            self.motorR.run_forever(speed_sp = -speed)
-            self.motorL.run_forever(speed_sp = speed)
-        else:
-            self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
-            self.motorL.run_timed(speed_sp = speed, time_sp = duration)
-
-    def rotate_left(self, speed = 80, duration = -1):
-        if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
             self.motorL.run_forever(speed_sp = -speed)
         else:
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
 
-    def steer_left(self, speed = 500, speed_back = 150, duration = -1):
+    def rotate_left(self, speed = 80, duration = -1):
         if (duration < 0):
-            self.motorR.run_forever(speed_sp = speed)
-            self.motorL.run_forever(speed_sp = 0.7*speed)
+            self.motorR.run_forever(speed_sp = -speed)
+            self.motorL.run_forever(speed_sp = speed)
         else:
-            self.motorR.run_timed(speed_sp = speed, time_sp = duration)
-            self.motorL.run_timed(speed_sp = 0.7*speed, time_sp = duration)
+            self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = speed, time_sp = duration)
 
-    def steer_right(self, speed = 500, speed_back = 150, duration = -1):
+    def steer_left(self, speed = 500, speed_back = 150, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = 0.7*speed)
             self.motorL.run_forever(speed_sp = speed)
         else:
             self.motorR.run_timed(speed_sp = 0.7*speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
+
+    def steer_right(self, speed = 500, speed_back = 150, duration = -1):
+        if (duration < 0):
+            self.motorR.run_forever(speed_sp = speed)
+            self.motorL.run_forever(speed_sp = 0.7*speed)
+        else:
+            self.motorR.run_timed(speed_sp = speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = 0.7*speed, time_sp = duration)
 
     def line_detected(self):
         return self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()
@@ -154,25 +155,28 @@ class Robot():
         # while (not self.grabberArms.is_overloaded):
         #     self.grabberArms.run_forever(speed_sp = speed)
         # self.grabberArms.stop()
-        self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp=300)
+        self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp = 800)
 
     def open_grabber(self):
         # while (not self.grabberArms.is_overloaded):
         #      self.grabberArms.run_forever(speed_sp = -speed)
         # self.grabberArms.stop()
-        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp= 300)
+        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 800)
 
-    def lift_up(self, speed = 200, time = 1200):
-        # while (not self.grabberLift.is_overloaded):
-        #      self.grabberLift.run_forever(speed_sp = speed)
-        # self.grabberLift.stop()
-        self.grabberLift.run_timed(speed_sp = speed, time_sp = time)
+    def lift_up(self, position = 400):
+        #self.grabberLift.run_timed(speed_sp = speed, time_sp = 1200)
 
-    def lift_down(self, speed = 100,  time = 1200):
-        # while (not self.grabberLift.is_overloaded):
-        #     self.grabberLift.run_forever(speed_sp = -speed)
-        # self.grabberLift.stop()
-        self.grabberLift.run_timed(speed_sp = -speed, time_sp = time)
+        #self.base_pos = self.grabberLift.position
+        self.grabberLift.run_to_abs_pos(speed_sp = -200,
+            position_sp = self.base_pos-position, stop_action = 'brake')
+        #self.grabberLift.run_to_abs_pos(position_sp = self.base_pos + 200, stop_action = 'brake')
+
+    def lift_down(self):
+        #self.grabberLift.run_timed(speed_sp = -speed, time_sp = 1200)
+
+        #self.grabberLift.run_to_rel_pos(position_sp =  800, stop_action = 'brake')
+        self.grabberLift.run_to_abs_pos(speed_sp = 200,
+            position_sp = self.base_pos, stop_action = 'brake')
 
     def stop_grabber(self):
         self.grabberArms.stop()
