@@ -46,6 +46,14 @@ class Robot():
         else:
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
+    
+    def straight_line_moving_backwards(self, speed = 250, duration = -1):
+        if (duration < 0):
+            self.motorR.run_forever(speed_sp = -speed)
+            self.motorL.run_forever(speed_sp = -speed)
+        else:
+            self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
+            self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
 
     def rotate_right(self, speed = 80, duration = -1):
         if (duration < 0):
@@ -156,12 +164,14 @@ class Robot():
         #     self.grabberArms.run_forever(speed_sp = speed)
         # self.grabberArms.stop()
         self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp = 800)
+        time.sleep(0.8)
 
     def open_grabber(self):
         # while (not self.grabberArms.is_overloaded):
         #      self.grabberArms.run_forever(speed_sp = -speed)
         # self.grabberArms.stop()
         self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 800)
+        time.sleep(0.8)
 
     def lift_up(self, position = 400):
         #self.grabberLift.run_timed(speed_sp = speed, time_sp = 1200)
@@ -170,6 +180,7 @@ class Robot():
         self.grabberLift.run_to_abs_pos(speed_sp = -200,
             position_sp = self.base_pos-position, stop_action = 'brake')
         #self.grabberLift.run_to_abs_pos(position_sp = self.base_pos + 200, stop_action = 'brake')
+        tim.sleep(2)
 
     def lift_down(self):
         #self.grabberLift.run_timed(speed_sp = -speed, time_sp = 1200)
@@ -177,6 +188,7 @@ class Robot():
         #self.grabberLift.run_to_rel_pos(position_sp =  800, stop_action = 'brake')
         self.grabberLift.run_to_abs_pos(speed_sp = 200,
             position_sp = self.base_pos, stop_action = 'brake')
+        tim.sleep(2)
 
     def stop_grabber(self):
         self.grabberArms.stop()
