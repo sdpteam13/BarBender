@@ -57,7 +57,6 @@ def slowdown():
     sp = 300
     while (sp - 150 * (end - start) > 80):
         robot.straight_line_moving(speed = sp - 150 * (end - start)) #move into the intersection
-        print(sp - 150 * (end - start))
         end = time.time()
 
     robot.straight_line_moving(speed = 80, duration = 1000)
