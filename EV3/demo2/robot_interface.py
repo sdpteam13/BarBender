@@ -102,8 +102,8 @@ def grab_cup():
     the robot should then pickup a cup.
     """
     turn_around(direction='right')
-    robot.lift_down()
-    robot.open_grabber()
+    robot.lift_down_less()
+    #robot.open_grabber()
     follow_line_backwards_until_intersection()
     robot.stop()
     robot.close_grabber()
