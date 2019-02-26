@@ -176,20 +176,18 @@ class Robot():
         time.sleep(0.8)
 
     def lift_up(self):
-        #self.grabberLift.run_timed(speed_sp = speed, time_sp = 1200)
-
-        #self.base_pos = self.grabberLift.position
         self.grabberLift.run_to_abs_pos(speed_sp = -200,
             position_sp = self.up_pos, stop_action = 'brake')
-        #self.grabberLift.run_to_abs_pos(position_sp = self.base_pos + 200, stop_action = 'brake')
         time.sleep(3)
 
     def lift_down(self):
-        #self.grabberLift.run_timed(speed_sp = -speed, time_sp = 1200)
-
-        #self.grabberLift.run_to_rel_pos(position_sp =  800, stop_action = 'brake')
         self.grabberLift.run_to_abs_pos(speed_sp = 200,
             position_sp = self.up_pos+400, stop_action = 'brake')
+        time.sleep(3)
+    
+    def lift_down_less(self):
+        self.grabberLift.run_to_abs_pos(speed_sp = 200,
+            position_sp = self.up_pos+300, stop_action = 'brake')
         time.sleep(3)
 
     def stop_grabber(self):
