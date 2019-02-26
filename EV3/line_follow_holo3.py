@@ -1,5 +1,6 @@
 import ev3dev.ev3 as ev3
 import time
+from environment import Environment
 
 # based on line_follow_holo2.py
 # more object-oriented
@@ -9,10 +10,12 @@ import time
 # from line_follow_tank2 import LineFollower
 # lf = LineFollower()
 # lf.run()
+env = Environment()
 
 class LineFollower():
-    def __init__(self, robot):
+    def __init__(self, robot, env):
         self.robot = robot
+        self.env = env
         self.motortime = 1000
         self.speed = 2.5
         self.turning_direction = 1 #1 = left, 2 = right
@@ -50,11 +53,11 @@ class LineFollower():
         else:
             self.turning_direction = 1
 
-    def target_sensed(self, intersectionColor = "green"):
+    def target_sensed(self, intersectionColor = env.corner_color):
         return self.robot.line_detected() or self.robot.color_detected(intersectionColor)
         #return self.robot.line_detected();
 
-    def find_line(self, iterations = 3, intersectionColor = "green"):
+    def find_line(self, iterations = 3, intersectionColor = env.corner_color):
         # If first attempt, set iteration to 3 for minor changes on a straight line
 
         # Turn one way first
