@@ -4,7 +4,17 @@ from robot_holo2 import Robot
 from line_follow_holo3 import LineFollower
 
 robot = Robot()
-lf = LineFollower()
+lf = LineFollower(robot)
+
+def start():
+    """
+    pre setup for robot state
+    """
+    robot.lift_up()
+
+def end():
+    robot.lift_down()
+    robot.stop()
 
 # right angle
 def turn_right(send_completion=True):
@@ -55,9 +65,15 @@ def follow_line_until_intersection():
 
         robot.straight_line_moving(speed = 80, duration = 1000)
         time.sleep(2)
-
-# follows white line
-	pass
+        
+def follow_line_backwards_until_intersection():
+    found_intersection = False
+    robot.straight_line_moving_backwards()
+    while not found_intersection:
+        if robot.color_detected('green'):
+            found_intersection = True
+        else:
+            lf.iteration_backwards()
 
 # between -1 and 1, -1 is turn left, 1 is turn right
 def turn(amount):
@@ -89,17 +105,25 @@ def turn_around(direction='right'):
 
 def grab_cup():
     """
-    After reaching an intersection (intersection A), the robot should then turn around and slowly approach the cup.
-    After the robot reaches the cup it should grab the cup and lift it off the ground
-    The robot should then go forwards towards intersection A and stop when it reaches the intersection
+    After reaching the cup intersection, the robot should turn around and go backwards until it reaches he intersection again,
+    the robot should then pickup a cup.
     """
-    pass
+    turn_around(direction='right')
+    follow_line_backwards_until_intersection()
+    robot.stop()
+    robot.lift_down()
+    robot.close_grabber()
+    robot.close_grabber()
+    robot.lift_up()
 
 def drop_cup():
     """
     After reaching an intersection, the robot should turn around, mvoe backwards, drop the cup and finally move forwards until it reaches the intersection again
     """
-    pass
+    robot.lift_down()
+    robot.open_grabber()
+    robot.open_grabber()
+    robot.lift_up()
 
 def dance():
     #robot.rotate_by_degree(degrees = 360)
