@@ -2,9 +2,11 @@ import ev3dev.ev3 as ev3
 import time
 from robot_holo2 import Robot
 from line_follow_holo3 import LineFollower
+from environment import Environment
 
 robot = Robot()
-lf = LineFollower(robot)
+env = Environment()
+lf = LineFollower(robot,env)
 
 def start():
     """
@@ -30,51 +32,41 @@ def turn_left():
     #robot.rotate_by_degree(degrees = -85)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
-def follow_line_until_intersection():
+def follow_line_until_intersection(slow = False):
         found_intersection = False
         robot.straight_line_moving()
         while not found_intersection:
-            if robot.color_detected('green'):
+            if robot.color_detected('red'):
                 found_intersection = True
             else:
-                #if (not robot.line_detected()):
-                #    #may have found intersection
-                #    if (robot.color_detected('green')):
-                #        found_intersection = True
-                #    else:
-                #        lf.find_line()
-                #        robot.straight_line_moving()
-
                 lf.iteration()
-
-            #if robot.way_blocked():
-            #    robot.stop()
-            #    time.sleep(0.2)
-            #else:
-            #    robot.straight_line_moving()
-
-
-        start = time.time()
-        print("hello")
-        end = time.time()
-        sp = 300
-        while (sp - 150 * (end - start) > 80):
-            robot.straight_line_moving(speed = sp - 150 * (end - start)) #move into the intersection
-            print(sp - 150 * (end - start))
-            end = time.time()
-
-        robot.straight_line_moving(speed = 80, duration = 1000)
-        time.sleep(2)
+        if slow:
+            slowdown()
+        else:
+            robot.stop()
         
 def follow_line_backwards_until_intersection():
     found_intersection = False
     robot.straight_line_moving_backwards()
     while not found_intersection:
-        if robot.color_detected('green'):
+        if robot.color_detected(env.corner_color):
             found_intersection = True
-        else:
-            lf.iteration_backwards()
+        # else:
+        #     lf.iteration_backwards()
 
+def slowdown():
+    #start = time.time()
+    #end = time.time()
+    #sp = 300
+    #while (sp - 150 * (end - start) > 80):
+    #    robot.straight_line_moving(speed = sp - 150 * (end - start)) #move into the intersection
+    #    #print(sp - 150 * (end - start))
+    #    end = time.time()
+    #robot.straight_line_moving(speed = 80, duration = 1000)
+    #time.sleep(2)
+    robot.straight_line_moving(duration = 1700)
+    time.sleep(3)
+    
 # between -1 and 1, -1 is turn left, 1 is turn right
 def turn(amount):
 	pass
@@ -94,12 +86,12 @@ def set_speed(x):
 def turn_around(direction='right'):
     if (direction == 'right'):
         #robot.rotate_by_degree(degrees = 180)
-        robot.rotate_by_degree(degrees = 90)
+        robot.rotate_by_degree(degrees = 70)
         robot.rotate_right_until_detected()
         robot.stop()
     else:
         #robot.rotate_by_degree(degrees = -180)
-        robot.rotate_by_degree(degrees = -90)
+        robot.rotate_by_degree(degrees = -70)
         robot.rotate_left_until_detected()
         robot.stop()
 
@@ -115,6 +107,8 @@ def grab_cup():
     robot.close_grabber()
     robot.close_grabber()
     robot.lift_up()
+    robot.straight_line_moving(duration = 500)
+    time.sleep(1)
 
 def drop_cup():
     """
@@ -126,5 +120,6 @@ def drop_cup():
     robot.lift_up()
 
 def dance():
-    #robot.rotate_by_degree(degrees = 360)
-    pass
+    for i in range(5):
+        ev3.Sound.beep()
+        time.sleep(1)

@@ -129,7 +129,7 @@ class Robot():
         self.reset_gyro()
 
     def rotate_left_until_detected(self, speed = 100):
-        self.rotate_by_degree(-45)
+        self.rotate_by_degree(-75)
         while (not self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()):
             self.rotate_left(speed)
         #self.stop()
@@ -137,7 +137,7 @@ class Robot():
 
 
     def rotate_right_until_detected(self, speed = 100):
-        self.rotate_by_degree(45)
+        self.rotate_by_degree(75)
         while (not self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()):
             self.rotate_right(speed)
         #self.stop()
