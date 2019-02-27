@@ -93,13 +93,13 @@ class Robot():
     def line_detected_middle(self):
         #table is about 60, white paper is about 90
 	    # black is below 10
-        return self.csM.reflected_light_intensity > 20
+        return self.csM.reflected_light_intensity > 30
 
     def line_detected_right(self):
-        return self.csR.reflected_light_intensity > 20
+        return self.csR.reflected_light_intensity > 30
 
     def line_detected_left(self):
-        return self.csL.reflected_light_intensity > 20
+        return self.csL.reflected_light_intensity > 30
 
     def color_detected(self, c = "red"):
         colours = ["none", "black", "blue", "green",
@@ -132,7 +132,7 @@ class Robot():
 
     def rotate_left_until_detected(self, speed = 100):
         self.rotate_by_degree(-75)
-        while (not self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()):
+        while (not self.line_detected_middle()):
             self.rotate_left(speed)
         #self.stop()
         self.reset_gyro()
@@ -140,7 +140,7 @@ class Robot():
 
     def rotate_right_until_detected(self, speed = 100):
         self.rotate_by_degree(75)
-        while (not self.line_detected_middle() or self.line_detected_right() or self.line_detected_left()):
+        while (not self.line_detected_middle()):
             self.rotate_right(speed)
         #self.stop()
         self.reset_gyro()

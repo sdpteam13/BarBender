@@ -16,7 +16,7 @@ def start():
     robot.lift_up()
 
 def end():
-    robot.lift_down()
+    #robot.lift_down()
     robot.stop()
 
 # right angle
@@ -66,7 +66,7 @@ def slowdown():
     #robot.straight_line_moving(speed = 80, duration = 1000)
     #time.sleep(2)
     robot.straight_line_moving(duration = 1700)
-    time.sleep(3)
+    time.sleep(1.7)
     
 # between -1 and 1, -1 is turn left, 1 is turn right
 def turn(amount):
@@ -102,11 +102,14 @@ def grab_cup():
     the robot should then pickup a cup.
     """
     turn_around(direction='right')
-    robot.lift_down_less()
     #robot.open_grabber()
-    follow_line_backwards_until_intersection()
+    robot.lift_down_less()
+    #follow_line_backwards_until_intersection()
+    robot.straight_line_moving_backwards(duration = 2000)
+    time.sleep(2)
     robot.stop()
-    robot.close_grabber()
+    #robot.lift_down_less()
+    #robot.close_grabber()
     robot.close_grabber()
     robot.lift_up()
     robot.straight_line_moving(duration = 1000)
