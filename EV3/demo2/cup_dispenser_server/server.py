@@ -25,12 +25,10 @@ class cup_dispenser:
 
     # go to the initialisation spot
     def initialise(self):
-        self.lift_reset()
+        self.lift_down()
         self.grab_reset()
         self.grab_open()
-        time.sleep(1)
         self.lift_up()
-        time.sleep(2)
     
     # calibrate, close the grabber
     def grab_reset(self):
@@ -39,36 +37,46 @@ class cup_dispenser:
         grab_motor.stop()
 
     # lift goes down
-    def lift_reset(self):
+    def lift_down(self):
         while not lift_sensor.is_pressed:
-            lift_motor.run_timed(speed_sp=600, time_sp=80)
+            lift_motor.run_timed(speed_sp=450, time_sp=80)
         lift_motor.stop()
+        time.sleep(0.2)
 
     # open the grabber
     def grab_open(self):
         grab_motor.run_timed(duty_cycle_sp=100, time_sp=800)
+        time.sleep(1)
         
     # close the grabber but pose more force in order to grab the cup
     def grab_close(self):
         grab_motor.run_timed(duty_cycle_sp=-100, time_sp=1300)
-        time.sleep(0.9)
-        if grab_sensor.is_pressed:
-            grab_motor.stop()
-
+        time.sleep(1.5)
+        
     # lift goes up
     def lift_up(self):
-        lift_motor.run_timed(speed_sp=-300, time_sp=1250)
+        lift_motor.run_timed(speed_sp=-450, time_sp=830)
+        time.sleep(1)
 
+    def cup_grab_fail(self):
+        grab_motor.run_timed(duty_cycle_sp=-100, time_sp=200)
+        time.sleep(.2)
+        return grab_sensor.is_pressed
+    
     # grab an empty cup
     def grab_and_down(self):
         self.grab_close()
-        time.sleep(2)
-        self.lift_reset()
-        time.sleep(2)
+        self.lift_down()
+        # grab to check if there is a cup grabbed
+        if self.cup_grab_fail():
+            #no cup, try again
+            self.grab_open()
+            self.lift_up()
+            self.grab_and_down()
+            return
+        
         self.grab_open()
-        time.sleep(2)
         self.lift_up()
-        time.sleep(2)
 
 class EchoRequestHandler(socketserver.BaseRequestHandler):
 
