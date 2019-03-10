@@ -95,6 +95,15 @@ def turn_around(direction='right'):
         robot.rotate_by_degree(degrees = -70)
         robot.rotate_left_until_detected()
         robot.stop()
+        
+def wait_for_drink():
+    robot.straight_line_moving(speed = -200,duration = 2000)
+    time.sleep(2)
+
+def drink_received():
+    robot.straight_line_moving(speed = 200,duration = 2000)
+    time.sleep(2)
+    
 
 def grab_cup():
     """
