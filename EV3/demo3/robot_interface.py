@@ -20,15 +20,15 @@ def end():
     robot.stop()
 
 # right angle
-def turn_right(send_completion=True):
-    robot.rotate_right_until_detected()
+def turn_right(speed = 100):
+    robot.rotate_right_until_detected(speed)
     robot.stop()
     #robot.rotate_by_degree(degrees = 85)
 
 
 # right angle
-def turn_left():
-    robot.rotate_left_until_detected()
+def turn_left(speed = 100):
+    robot.rotate_left_until_detected(speed)
     robot.stop()
     #robot.rotate_by_degree(degrees = -85)
 
@@ -46,7 +46,7 @@ def follow_line_until_intersection(slow = False):
         else:
             robot.stop()
         
-def follow_line_backwards_until_intersection():
+def backwards_until_intersection():
     found_intersection = False
     robot.straight_line_moving_backwards()
     while not found_intersection:
@@ -67,6 +67,38 @@ def slowdown():
     #time.sleep(2)
     robot.straight_line_moving(duration = 1700)
     time.sleep(1.7)
+
+def go_to_first_drink():
+    # use after grab cup
+    turn_left()
+    follow_line_until_intersection()
+    turn_right(speed = 50)
+    robot.straight_line_moving_backwards(duration = 600)
+    time.sleep(1)
+    robot.stop()
+    
+def go_to_second_drink():
+    # use after get first drink
+    robot.straight_line_moving(duration = 600)
+    time.sleep(1)
+    turn_right()
+    follow_line_until_intersection()
+    robot.straight_line_moving(duration = 500)
+    time.sleep(0.5)
+    follow_line_until_intersection()
+    turn_left(speed = 50)
+    robot.straight_line_moving_backwards(duration = 600)
+    time.sleep(1)
+    robot.stop()
+
+def back_to_track():
+    # use after get second drink
+    robot.straight_line_moving(duration = 600)
+    time.sleep(1)
+    turn_left()
+    follow_line_until_intersection(slow=True)
+    turn_right()
+    # use follow_line_until_intersection(slow=True) after
     
 # between -1 and 1, -1 is turn left, 1 is turn right
 def turn(amount):
@@ -113,9 +145,9 @@ def grab_cup():
     turn_around(direction='right')
     #robot.open_grabber()
     robot.lift_down_less()
-    #follow_line_backwards_until_intersection()
-    robot.straight_line_moving_backwards(duration = 2000)
-    time.sleep(2)
+    backwards_until_intersection()
+    #robot.straight_line_moving_backwards(duration = 2000)
+    #time.sleep(2)
     robot.stop()
     #robot.lift_down_less()
     #robot.close_grabber()
