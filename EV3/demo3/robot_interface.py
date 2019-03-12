@@ -33,7 +33,7 @@ def turn_left(speed = 100):
     #robot.rotate_by_degree(degrees = -85)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
-def follow_line_until_intersection(slow = False):
+def follow_line_until_intersection(slow = False, slow_duration = 1500):
         found_intersection = False
         robot.straight_line_moving()
         while not found_intersection:
@@ -42,7 +42,7 @@ def follow_line_until_intersection(slow = False):
             else:
                 lf.iteration()
         if slow:
-            slowdown()
+            slowdown(slow_duration)
         else:
             robot.stop()
         
@@ -55,7 +55,7 @@ def backwards_until_intersection():
         # else:
         #     lf.iteration_backwards()
 
-def slowdown():
+def slowdown(duration = 1500):
     #start = time.time()
     #end = time.time()
     #sp = 300
@@ -65,40 +65,46 @@ def slowdown():
     #    end = time.time()
     #robot.straight_line_moving(speed = 80, duration = 1000)
     #time.sleep(2)
-    robot.straight_line_moving(duration = 1700)
-    time.sleep(1.7)
+    robot.straight_line_moving(duration = duration)
+    time.sleep(duration / 1000.0)
 
-def go_to_first_drink():
+def get_drink_A():
     # use after grab cup
-    turn_left()
-    follow_line_until_intersection()
+    # turn_left()
+    
+    #follow_line_until_intersection()
     turn_right(speed = 50)
     robot.straight_line_moving_backwards(duration = 600)
-    time.sleep(1)
-    robot.stop()
+    time.sleep(0.6)
     
-def go_to_second_drink():
-    # use after get first drink
+    # TODO replace sleep by server
+    time.sleep(10)
+    
     robot.straight_line_moving(duration = 600)
-    time.sleep(1)
+    time.sleep(0.6)
     turn_right()
-    follow_line_until_intersection()
-    robot.straight_line_moving(duration = 500)
-    time.sleep(0.5)
-    follow_line_until_intersection()
+
+    
+def get_drink_B():
+    # use after get first drink
+    
+    
+    #follow_line_until_intersection(slow = True, slow_duration = 500)
+    
+    #follow_line_until_intersection()
     turn_left(speed = 50)
     robot.straight_line_moving_backwards(duration = 600)
-    time.sleep(1)
-    robot.stop()
-
-def back_to_track():
-    # use after get second drink
+    time.sleep(0.6)
+    
+    # TODO replace sleep by server
+    time.sleep(10)
+    
     robot.straight_line_moving(duration = 600)
-    time.sleep(1)
+    time.sleep(0.6)
     turn_left()
-    follow_line_until_intersection(slow=True)
-    turn_right()
-    # use follow_line_until_intersection(slow=True) after
+    
+    #follow_line_until_intersection(slow=True)
+    #turn_right()
     
 # between -1 and 1, -1 is turn left, 1 is turn right
 def turn(amount):
