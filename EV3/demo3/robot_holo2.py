@@ -199,3 +199,6 @@ class Robot():
 
     def stop_lift(self):
         self.grabberLift.stop()
+
+    def beep(self):
+        ev3.Sound.beep()

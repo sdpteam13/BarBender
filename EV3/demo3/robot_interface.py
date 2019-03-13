@@ -33,14 +33,15 @@ def turn_left(speed = 100):
     #robot.rotate_by_degree(degrees = -85)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
-def follow_line_until_intersection(slow = False, slow_duration = 1500):
+def follow_line_until_intersection(slow = False, slow_duration = 1500, fast = False):
         found_intersection = False
+        lmao = fast
         robot.straight_line_moving()
         while not found_intersection:
             if robot.color_detected('red'):
                 found_intersection = True
             else:
-                lf.iteration()
+                lf.iteration(fast=lmao)
         if slow:
             slowdown(slow_duration)
         else:
@@ -55,56 +56,31 @@ def backwards_until_intersection():
         # else:
         #     lf.iteration_backwards()
 
-def slowdown(duration = 1500):
-    #start = time.time()
-    #end = time.time()
-    #sp = 300
-    #while (sp - 150 * (end - start) > 80):
-    #    robot.straight_line_moving(speed = sp - 150 * (end - start)) #move into the intersection
-    #    #print(sp - 150 * (end - start))
-    #    end = time.time()
-    #robot.straight_line_moving(speed = 80, duration = 1000)
-    #time.sleep(2)
+def slowdown(duration = 1500, speed=250):
     robot.straight_line_moving(duration = duration)
     time.sleep(duration / 1000.0)
-
-def get_drink_A():
-    # use after grab cup
-    # turn_left()
     
-    #follow_line_until_intersection()
-    turn_right(speed = 50)
+def get_drink(drink='A'):
+    if drink == 'A':
+        turn_left(speed=50)
+    else:
+        turn_right(speed=50)
+
+
+    #turn_left(speed = 50)
     robot.straight_line_moving_backwards(duration = 600)
     time.sleep(0.6)
     
-    # TODO replace sleep by server
-    time.sleep(10)
+    ev3.Sound.beep()
+    client_socket.send_and_receive(drink)
+    ev3.Sound.beep()
     
     robot.straight_line_moving(duration = 600)
     time.sleep(0.6)
-    turn_right()
-
-    
-def get_drink_B():
-    # use after get first drink
-    
-    
-    #follow_line_until_intersection(slow = True, slow_duration = 500)
-    
-    #follow_line_until_intersection()
-    turn_left(speed = 50)
-    robot.straight_line_moving_backwards(duration = 600)
-    time.sleep(0.6)
-    
-    # TODO replace sleep by server
-    time.sleep(10)
-    
-    robot.straight_line_moving(duration = 600)
-    time.sleep(0.6)
-    turn_left()
-    
-    #follow_line_until_intersection(slow=True)
-    #turn_right()
+    if drink == 'A':
+        turn_left(speed=50)
+    else:
+        turn_right(speed=50)
     
 # between -1 and 1, -1 is turn left, 1 is turn right
 def turn(amount):

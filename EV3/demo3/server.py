@@ -1,6 +1,7 @@
 import socketserver
 import time
 import requests
+import ev3dev.ev3 as ev3
 import robot_interface as rob
 
 class EchoRequestHandler(socketserver.BaseRequestHandler):
@@ -25,6 +26,8 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
                 rob.follow_line()
             elif c == 'f':
                 rob.follow_line_until_intersection(slow=True)
+            elif c == 'F':
+                rob.follow_line_until_intersection(slow=True, fast=True)
             elif c[:4] == 'turn':
                 rob.turn(float(st[4:]))
             elif c == 'g':
@@ -43,6 +46,10 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
                 rob.drop_cup()
             elif c == 's':
                 rob.follow_line_until_intersection(slow=False)
+            elif c == 'a':
+                rob.get_drink('A')
+            elif c == 'b':
+                rob.get_drink('B')
             else:
                 rob.stop()
         requests.post('http://192.168.105.142/EV3/')
@@ -61,6 +68,10 @@ if __name__ == '__main__':
     t = threading.Thread(target=server.serve_forever)
     t.setDaemon(True) # don't hang on exit
     t.start()
+
+    ev3.Sound.beep()
+    ev3.Sound.beep()
+    ev3.Sound.beep()
 
     while True:
         time.sleep(1)
