@@ -1,4 +1,3 @@
-import ev3dev.ev3 as ev3
 import time
 from environment import Environment
 
@@ -23,35 +22,19 @@ class LineFollower():
         self.offline = 0
         self.left_adjust = 0
         self.right_adjust = 0
-
-    #def forward(self):
-    #    # not used for now, remove?
-    #    for i in range(int(self.motortime / 100)):
-    #        if self.robot.way_blocked():
-    #            self.robot.stop()
-    #            time.sleep(0.2)
-    #            i = i - 1
-    #        else:
-    #            self.robot.straight_line_moving(self.speed * 100, duration = 120)
-
-    def left_turn(self, speed, t):
-        self.robot.rotate_left(speed * 100, duration = t)
-
-    def right_turn(self, speed, t):
-        self.robot.rotate_right(speed * 100, duration = t)
-
-    def turn(self, speed):
-        # Turn for 0.1s and a bit more for smoothness
-        if (self.turning_direction == 1):
-            self.left_turn(speed, 100)
-        else:
-            self.right_turn(speed, 100)
-
+    
     def change_turn_direction(self):
         if (self.turning_direction == 1):
             self.turning_direction = 2
         else:
             self.turning_direction = 1
+    
+    def turn(self, speed):
+        # Turn for 0.1s and a bit more for smoothness
+        if (self.turning_direction == 1):
+            self.robot.rotate_left(speed * 100, duration = 100)
+        else:
+            self.robot.rotate_right(speed * 100, duration = 100)
 
     def target_sensed(self, intersectionColor = env.corner_color):
         return self.robot.line_detected() or self.robot.color_detected(intersectionColor)
@@ -94,14 +77,14 @@ class LineFollower():
         # Increase search space
         self.find_line(iterations + 2)
 
-    def iteration(self,a_speed=250, fast = False):
+    def iteration(self, a_speed = None):
         if (self.robot.way_blocked()):
             self.robot.stop()
             return
-
-        if fast:
-            a_speed=500
-
+        
+        if a_speed is None:
+            a_speed = 250
+        
         detected_R = self.robot.line_detected_right()
         detected_M = self.robot.line_detected_middle()
         detected_L = self.robot.line_detected_left()
@@ -127,34 +110,6 @@ class LineFollower():
         elif (detected_M):
             self.robot.straight_line_moving(speed=a_speed)
 
-        else:
-            # shouldn't be triggered
-            pass
-        
-    def iteration_backwards(self, speed = 150):
-        if (self.robot.way_blocked()):
-            self.robot.stop()
-            return
-
-        detected_R = self.robot.line_detected_right()
-        detected_M = self.robot.line_detected_middle()
-        detected_L = self.robot.line_detected_left()
-
-        if (not (detected_R or detected_M or detected_L)):
-            self.offline = self.offline + 1
-            #print("unfind", self.offline)
-            self.find_line()
-
-        elif (detected_L):
-            self.left_adjust = self.left_adjust + 1
-            #print("left adjust", self.left_adjust)
-            self.robot.steer_left(-150)
-        elif (detected_R):
-            self.right_adjust = self.right_adjust + 1
-            #print("right adjust", self.right_adjust)
-            self.robot.steer_right(-150)
-        elif (detected_M):
-            self.robot.straight_line_moving_backwards(speed)
         else:
             # shouldn't be triggered
             pass

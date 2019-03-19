@@ -115,7 +115,7 @@ class Robot():
     #    print(distance)
         return False #distance < 6 or distance > 250
 
-    def rotate_by_degree(self, degrees, time_taken=-1, speed = 100):
+    def rotate_by_degree(self, degrees, time_taken=-1, speed = 200):
         # time_taken need to related to rotation speed, not implement for now
         self.reset_gyro()
         # positive degree - right rotation; negetive degree - left rotation
@@ -130,22 +130,29 @@ class Robot():
         #self.stop()
         self.reset_gyro()
 
-    def rotate_left_until_detected(self, speed = 100):
+    def rotate_left_until_detected(self, speed = None):
+        if speed is None:
+            speed = 100
+            
         self.rotate_by_degree(-60)
-        # speculative fix
-        self.line_detected_middle()
+        self.line_detected_middle() #Fixes wrongly detecting line
+        self.rotate_left(speed)
+        #while (not self.line_detected_middle() or self.line_detected_left()):
         while (not self.line_detected_middle()):
-            self.rotate_left(speed)
+            pass
         #self.stop()
         self.reset_gyro()
-
-
-    def rotate_right_until_detected(self, speed = 100):
+        
+    def rotate_right_until_detected(self, speed = None):
+        if speed is None:
+            speed = 100
+            
         self.rotate_by_degree(60)
-        # speculative fix
-        self.line_detected_middle()
+        self.line_detected_middle() #Fixes wrongly detecting line
+        self.rotate_right(speed)
+        #while (not self.line_detected_middle() or self.line_detected_right()):
         while (not self.line_detected_middle()):
-            self.rotate_right(speed)
+            pass
         #self.stop()
         self.reset_gyro()
 
@@ -165,12 +172,13 @@ class Robot():
         #self.stop()
         self.reset_gyro()
 
-    def close_grabber(self):
+    def close_grabber(self, blocking = True):
         # while (not self.grabberArms.is_overloaded):
         #     self.grabberArms.run_forever(speed_sp = speed)
         # self.grabberArms.stop()
         self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp = 800)
-        time.sleep(0.8)
+        if blocking:
+            time.sleep(0.8)
 
     def open_grabber(self):
         # while (not self.grabberArms.is_overloaded):
@@ -179,21 +187,18 @@ class Robot():
         self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 800)
         time.sleep(0.8)
 
-    def lift_up(self):
-        self.grabberLift.run_to_abs_pos(speed_sp = -200,
+    def lift_up(self, blocking = True):
+        self.grabberLift.run_to_abs_pos(speed_sp = -300,
             position_sp = self.up_pos, stop_action = 'brake')
-        time.sleep(3)
+        if blocking:
+            time.sleep(1.7)
 
-    def lift_down(self):
-        self.grabberLift.run_to_abs_pos(speed_sp = 200,
-            position_sp = self.up_pos+400, stop_action = 'brake')
-        time.sleep(3)
+    def lift_down(self, position_offset = 400):
+        self.grabberLift.run_to_abs_pos(speed_sp = 300,
+            position_sp = self.up_pos+position_offset,
+            stop_action = 'brake')
+        time.sleep(1.7)
     
-    def lift_down_less(self):
-        self.grabberLift.run_to_abs_pos(speed_sp = 200,
-            position_sp = self.up_pos+300, stop_action = 'brake')
-        time.sleep(3)
-
     def stop_grabber(self):
         self.grabberArms.stop()
 

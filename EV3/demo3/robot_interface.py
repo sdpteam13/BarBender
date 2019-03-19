@@ -1,4 +1,3 @@
-import ev3dev.ev3 as ev3
 import time
 import client_socket
 from robot_holo2 import Robot
@@ -33,17 +32,26 @@ def turn_left(speed = 100):
     #robot.rotate_by_degree(degrees = -85)
 
 # follows white line until an intersection is discovered (to be replaced by pi vision)
-def follow_line_until_intersection(slow = False, slow_duration = 1500, fast = False):
+#overrun = do overrun after intersection
+#fast = line following speed increase
+def follow_line_until_intersection(overrun = False, overrun_short = False, fast = False):
         found_intersection = False
-        lmao = fast
-        robot.straight_line_moving()
+        
+        lf_speed = None
+        if fast:
+            lf_speed = 500
+            
+        #robot.straight_line_moving()
         while not found_intersection:
             if robot.color_detected('red'):
                 found_intersection = True
             else:
-                lf.iteration(fast=lmao)
-        if slow:
-            slowdown(slow_duration)
+                lf.iteration(a_speed = lf_speed)
+        if overrun:
+            if overrun_short:
+                slowdown_short(speed = lf_speed)
+            else:
+                slowdown(speed = lf_speed)
         else:
             robot.stop()
         
@@ -56,27 +64,46 @@ def backwards_until_intersection():
         # else:
         #     lf.iteration_backwards()
 
-def slowdown(duration = 1500, speed=250):
-    robot.straight_line_moving(duration = duration)
-    time.sleep(duration / 1000.0)
+def slowdown(speed = None):
+    if speed is None:
+        speed = 250
+        duration = 1400
+    else:
+        #run the same distance regardless of speed
+        duration = 1400 * 250 / speed
+        
+    robot.straight_line_moving(duration = duration, speed = speed)
+    time.sleep(duration / 1000.0 - 0.1)
+    
+def slowdown_short(speed = None):
+    if speed is None:
+        speed = 250
+        duration = 600
+    else:
+        #run the same distance regardless of speed
+        duration = 600 * 250 / speed
+        
+    robot.straight_line_moving(duration = duration, speed = speed)
+    time.sleep(duration / 1000.0 - 0.15)
+    print(robot.csM.reflected_light_intensity)
     
 def get_drink(drink='A'):
     if drink == 'A':
-        turn_left(speed=50)
+        turn_left(speed = 50)
     else:
-        turn_right(speed=50)
+        turn_right(speed = 50)
 
 
     #turn_left(speed = 50)
-    robot.straight_line_moving_backwards(duration = 600)
-    time.sleep(0.6)
+    robot.straight_line_moving_backwards(duration = 650)
+    time.sleep(0.7)
     
-    ev3.Sound.beep()
+    robot.beep()
     client_socket.send_and_receive(drink)
-    ev3.Sound.beep()
+    robot.beep()
     
-    robot.straight_line_moving(duration = 600)
-    time.sleep(0.6)
+    robot.straight_line_moving(duration = 650)
+    time.sleep(0.7)
     if drink == 'A':
         turn_left(speed=50)
     else:
@@ -98,16 +125,16 @@ def set_speed(x):
 	pass
 
 # 180 degree turn
-def turn_around(direction='right'):
+def turn_around(direction='right', speed = None):
     if (direction == 'right'):
         #robot.rotate_by_degree(degrees = 180)
-        robot.rotate_by_degree(degrees = 70)
-        robot.rotate_right_until_detected()
+        robot.rotate_by_degree(degrees = 80)
+        robot.rotate_right_until_detected(speed)
         robot.stop()
     else:
         #robot.rotate_by_degree(degrees = -180)
-        robot.rotate_by_degree(degrees = -70)
-        robot.rotate_left_until_detected()
+        robot.rotate_by_degree(degrees = -80)
+        robot.rotate_left_until_detected(speed)
         robot.stop()
     
 
@@ -116,15 +143,11 @@ def grab_cup():
     After reaching the cup intersection, the robot should turn around and go backwards until it reaches he intersection again,
     the robot should then pickup a cup.
     """
-    turn_around(direction='right')
-    #robot.open_grabber()
-    robot.lift_down_less()
+    turn_around(direction='right', speed = 50)
+    #lift down a bit less so the grabber clears the stand
+    robot.lift_down(position_offset = 285)
     backwards_until_intersection()
-    #robot.straight_line_moving_backwards(duration = 2000)
-    #time.sleep(2)
     robot.stop()
-    #robot.lift_down_less()
-    #robot.close_grabber()
     robot.close_grabber()
     robot.lift_up()
     robot.straight_line_moving(duration = 1000)
@@ -137,17 +160,16 @@ def grab_cup():
 
 def drop_cup():
     """
-    After reaching an intersection, the robot should turn around, mvoe backwards, drop the cup and finally move forwards until it reaches the intersection again
+    After reaching an intersection, the robot should turn around, move backwards
+    drop the cup and finally move forwards until it reaches the intersection again
     """
     robot.lift_down()
     robot.open_grabber()
     robot.open_grabber()
-    robot.lift_up()
-    robot.straight_line_moving(duration=500)
-    time.sleep(0.5)
-    robot.close_grabber()
+    robot.lift_up(blocking = False)
+    robot.close_grabber(blocking = False)
 
 def dance():
     for i in range(5):
-        ev3.Sound.beep()
+        robot.beep()
         time.sleep(1)
