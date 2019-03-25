@@ -1,6 +1,6 @@
 import time
 from environment import Environment
-
+env = Environment()
 # based on line_follow_holo2.py
 # more object-oriented
 
@@ -9,12 +9,10 @@ from environment import Environment
 # from line_follow_tank2 import LineFollower
 # lf = LineFollower()
 # lf.run()
-env = Environment()
 
 class LineFollower():
-    def __init__(self, robot, env):
+    def __init__(self, robot):
         self.robot = robot
-        self.env = env
         self.motortime = 1000
         self.speed = 2.5
         self.turning_direction = 1 #1 = left, 2 = right

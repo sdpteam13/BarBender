@@ -6,7 +6,7 @@ from environment import Environment
 
 robot = Robot()
 env = Environment()
-lf = LineFollower(robot,env)
+lf = LineFollower(robot)
 
 def start():
     """
@@ -39,9 +39,8 @@ def follow_line_until_intersection(overrun = False, overrun_short = False, fast 
         
         lf_speed = None
         if fast:
-            lf_speed = 500
+            lf_speed = env.moving_speed_normal
             
-        #robot.straight_line_moving()
         while not found_intersection:
             if robot.color_detected('red'):
                 found_intersection = True
@@ -66,22 +65,22 @@ def backwards_until_intersection():
 
 def slowdown(speed = None):
     if speed is None:
-        speed = 250
+        speed = env.moving_speed_slow
         duration = 1400
     else:
         #run the same distance regardless of speed
-        duration = 1400 * 250 / speed
+        duration = 1400 * env.moving_speed_slow / speed
         
     robot.straight_line_moving(duration = duration, speed = speed)
     time.sleep(duration / 1000.0 - 0.1)
     
 def slowdown_short(speed = None):
     if speed is None:
-        speed = 250
+        speed = env.moving_speed_slow
         duration = 600
     else:
         #run the same distance regardless of speed
-        duration = 600 * 250 / speed
+        duration = 600 * env.moving_speed_slow / speed
         
     robot.straight_line_moving(duration = duration, speed = speed)
     time.sleep(duration / 1000.0 - 0.15)
@@ -89,9 +88,9 @@ def slowdown_short(speed = None):
     
 def get_drink(drink='A'):
     if drink == 'A':
-        turn_left(speed = 50)
+        turn_left(speed = env.rotation_speed_slow)
     else:
-        turn_right(speed = 50)
+        turn_right(speed = env.rotation_speed_slow)
 
 
     #turn_left(speed = 50)
@@ -108,10 +107,6 @@ def get_drink(drink='A'):
         turn_left(speed=50)
     else:
         turn_right(speed=50)
-    
-# between -1 and 1, -1 is turn left, 1 is turn right
-def turn(amount):
-	pass
 
 def stop():
 	robot.stop()
@@ -143,7 +138,7 @@ def grab_cup():
     After reaching the cup intersection, the robot should turn around and go backwards until it reaches he intersection again,
     the robot should then pickup a cup.
     """
-    turn_around(direction='right', speed = 50)
+    turn_around(direction='right', speed = env.rotation_speed_slow)
     #lift down a bit less so the grabber clears the stand
     robot.lift_down(position_offset = 285)
     backwards_until_intersection()
