@@ -42,7 +42,7 @@ class Robot():
         self.motorR.stop()
         self.motorL.stop()
 
-    def straight_line_moving(self, speed = 250, duration = -1):
+    def straight_line_moving(self, speed = env.moving_speed_slow, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
             self.motorL.run_forever(speed_sp = speed)
@@ -50,7 +50,7 @@ class Robot():
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
     
-    def straight_line_moving_backwards(self, speed = 250, duration = -1):
+    def straight_line_moving_backwards(self, speed = env.moving_speed_slow, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = -speed)
             self.motorL.run_forever(speed_sp = -speed)
@@ -58,7 +58,7 @@ class Robot():
             self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
 
-    def rotate_right(self, speed = 80, duration = -1):
+    def rotate_right(self, speed, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
             self.motorL.run_forever(speed_sp = -speed)
@@ -66,7 +66,7 @@ class Robot():
             self.motorR.run_timed(speed_sp = speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)
 
-    def rotate_left(self, speed = 80, duration = -1):
+    def rotate_left(self, speed, duration = -1):
         if (duration < 0):
             self.motorR.run_forever(speed_sp = -speed)
             self.motorL.run_forever(speed_sp = speed)
@@ -74,7 +74,8 @@ class Robot():
             self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
 
-    def steer_left(self, speed = 500, duration = -1):
+    def steer_left(self, speed, duration = -1):
+        speed = speed + 50
         if (duration < 0):
             self.motorR.run_forever(speed_sp = 0.7*speed)
             self.motorL.run_forever(speed_sp = speed)
@@ -82,7 +83,8 @@ class Robot():
             self.motorR.run_timed(speed_sp = 0.7*speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = speed, time_sp = duration)
 
-    def steer_right(self, speed = 500, duration = -1):
+    def steer_right(self, speed, duration = -1):
+        speed = speed + 50
         if (duration < 0):
             self.motorR.run_forever(speed_sp = speed)
             self.motorL.run_forever(speed_sp = 0.7*speed)
@@ -118,7 +120,7 @@ class Robot():
     #    print(distance)
         return False #distance < 6 or distance > 250
 
-    def rotate_by_degree(self, degrees, time_taken=-1, speed = 200):
+    def rotate_by_degree(self, degrees, time_taken=-1, speed = env.rotation_speed_normal):
         # time_taken need to related to rotation speed, not implement for now
         self.reset_gyro()
         # positive degree - right rotation; negetive degree - left rotation
@@ -133,9 +135,7 @@ class Robot():
         #self.stop()
         self.reset_gyro()
 
-    def rotate_left_until_detected(self, speed = None):
-        if speed is None:
-            speed = 100
+    def rotate_left_until_detected(self, speed = env.rotation_speed_normal):
             
         self.rotate_by_degree(-60)
         self.line_detected_middle() #Fixes wrongly detecting line
@@ -146,9 +146,7 @@ class Robot():
         #self.stop()
         self.reset_gyro()
         
-    def rotate_right_until_detected(self, speed = None):
-        if speed is None:
-            speed = 100
+    def rotate_right_until_detected(self, speed = env.rotation_speed_normal):
             
         self.rotate_by_degree(60)
         self.line_detected_middle() #Fixes wrongly detecting line
@@ -159,34 +157,28 @@ class Robot():
         #self.stop()
         self.reset_gyro()
 
-
-    def steer_by_degree(self, degrees, time_taken = -1, speed = 300):
-        # time_taken need to related to rotation speed, not implement for now
-        self.reset_gyro()
-        # positive degree - right rotation; negetive degree - left rotation
-        if (degrees > 0):
-            self.steer_right(speed)
-            while self.gy.angle < degrees:
-                pass
-        else:
-            self.steer_left(speed)
-            while self.gy.angle > degrees:
-                pass
-        #self.stop()
-        self.reset_gyro()
+    # TODO: unused method, delete?
+    # def steer_by_degree(self, degrees, time_taken = -1, speed = env.moving_speed_normal):
+    #     # time_taken need to related to rotation speed, not implement for now
+    #     self.reset_gyro()
+    #     # positive degree - right rotation; negetive degree - left rotation
+    #     if (degrees > 0):
+    #         self.steer_right(speed)
+    #         while self.gy.angle < degrees:
+    #             pass
+    #     else:
+    #         self.steer_left(speed)
+    #         while self.gy.angle > degrees:
+    #             pass
+    #     #self.stop()
+    #     self.reset_gyro()
 
     def close_grabber(self, blocking = True):
-        # while (not self.grabberArms.is_overloaded):
-        #     self.grabberArms.run_forever(speed_sp = speed)
-        # self.grabberArms.stop()
         self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp = 800)
         if blocking:
             time.sleep(0.8)
 
     def open_grabber(self):
-        # while (not self.grabberArms.is_overloaded):
-        #      self.grabberArms.run_forever(speed_sp = -speed)
-        # self.grabberArms.stop()
         self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 800)
         time.sleep(0.8)
 

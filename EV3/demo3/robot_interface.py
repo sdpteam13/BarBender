@@ -19,14 +19,14 @@ def end():
     robot.stop()
 
 # right angle
-def turn_right(speed = 100):
+def turn_right(speed = env.rotation_speed_normal):
     robot.rotate_right_until_detected(speed)
     robot.stop()
     #robot.rotate_by_degree(degrees = 85)
 
 
 # right angle
-def turn_left(speed = 100):
+def turn_left(speed = env.rotation_speed_normal):
     robot.rotate_left_until_detected(speed)
     robot.stop()
     #robot.rotate_by_degree(degrees = -85)
@@ -37,9 +37,10 @@ def turn_left(speed = 100):
 def follow_line_until_intersection(overrun = False, overrun_short = False, fast = False):
         found_intersection = False
         
-        lf_speed = None
         if fast:
             lf_speed = env.moving_speed_normal
+        else:
+            lf_speed = env.moving_speed_slow
             
         while not found_intersection:
             if robot.color_detected('red'):
@@ -63,25 +64,15 @@ def backwards_until_intersection():
         # else:
         #     lf.iteration_backwards()
 
-def slowdown(speed = None):
-    if speed is None:
-        speed = env.moving_speed_slow
-        duration = 1400
-    else:
-        #run the same distance regardless of speed
-        duration = 1400 * env.moving_speed_slow / speed
-        
+def slowdown(speed = env.moving_speed_slow):
+    #run the same distance regardless of speed
+    duration = 1400 * env.moving_speed_slow / speed
     robot.straight_line_moving(duration = duration, speed = speed)
     time.sleep(duration / 1000.0 - 0.1)
     
-def slowdown_short(speed = None):
-    if speed is None:
-        speed = env.moving_speed_slow
-        duration = 600
-    else:
-        #run the same distance regardless of speed
-        duration = 600 * env.moving_speed_slow / speed
-        
+def slowdown_short(speed = env.moving_speed_slow):
+    #run the same distance regardless of speed
+    duration = 600 * env.moving_speed_slow / speed
     robot.straight_line_moving(duration = duration, speed = speed)
     time.sleep(duration / 1000.0 - 0.15)
     print(robot.csM.reflected_light_intensity)
@@ -119,8 +110,11 @@ def go():
 def set_speed(x):
 	pass
 
+def turn(amount):	
+	pass
+
 # 180 degree turn
-def turn_around(direction='right', speed = None):
+def turn_around(direction='right', speed = env.rotation_speed_normal):
     if (direction == 'right'):
         #robot.rotate_by_degree(degrees = 180)
         robot.rotate_by_degree(degrees = 80)

@@ -25,9 +25,10 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
             elif (c == 'follow_line'):
                 rob.follow_line()
             elif c == 'f':
-                rob.follow_line_until_intersection(slow=True)
+                rob.follow_line_until_intersection(overrun=True)
             elif c == 'F':
-                rob.follow_line_until_intersection(slow=True, fast=True)
+                # do short overrun when the next command is fast line following
+                rob.follow_line_until_intersection(overrun=True, overrun_short = (len(st) == i+1 or st[i+1] == 'F'), fast=True)
             elif c[:4] == 'turn':
                 rob.turn(float(st[4:]))
             elif c == 'g':
@@ -45,7 +46,7 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
             elif c == 'x':
                 rob.drop_cup()
             elif c == 's':
-                rob.follow_line_until_intersection(slow=False)
+                rob.follow_line_until_intersection(overrun=False)
             elif c == 'a':
                 rob.get_drink('A')
             elif c == 'b':
