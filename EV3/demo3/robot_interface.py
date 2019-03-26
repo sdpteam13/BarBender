@@ -44,10 +44,23 @@ def follow_line_until_intersection(overrun = False, overrun_short = False, fast 
             robot.stop()
         
 def backwards_until_intersection():
-    found_intersection = False
     robot.straight_line_moving_backwards()
     while not robot.color_detected():
         pass
+
+def backwards_adjust():
+    robot.straight_line_moving_backwards(speed = 50)
+    while robot.color_detected():
+        pass
+    robot.stop()
+    time.sleep(2)
+    
+def forward_adjust():
+    robot.straight_line_moving(speed = 50)
+    while robot.color_detected():
+        pass
+    robot.stop()
+    time.sleep(2)
 
 def slowdown(speed = env.moving_speed_slow):
     #run the same distance regardless of speed
@@ -63,6 +76,8 @@ def slowdown_short(speed = env.moving_speed_slow):
     print(robot.csM.reflected_light_intensity)
     
 def get_drink(drink='A'):
+    backwards_adjust()
+    
     if drink == 'A':
         turn_left(slow_end = True)
     else:
@@ -116,6 +131,7 @@ def grab_cup():
     After reaching the cup intersection, the robot should turn around and go backwards until it reaches he intersection again,
     the robot should then pickup a cup.
     """
+    forward_adjust()
     turn_around(direction='right', slow_end = True)
     #lift down a bit less so the grabber clears the stand
     robot.lift_down(position_offset = 285)
