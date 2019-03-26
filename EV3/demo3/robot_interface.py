@@ -8,26 +8,16 @@ robot = Robot()
 env = Environment()
 lf = LineFollower(robot)
 
-def start():
-    """
-    pre setup for robot state
-    """
-    robot.lift_up()
-
-def end():
-    #robot.lift_down()
-    robot.stop()
-
 # right angle
-def turn_right(speed = env.rotation_speed_normal):
-    robot.rotate_right_until_detected(speed)
+def turn_right(slow_end = False):
+    robot.rotate_right_until_detected(slow_end = slow_end)
     robot.stop()
     #robot.rotate_by_degree(degrees = 85)
 
 
 # right angle
-def turn_left(speed = env.rotation_speed_normal):
-    robot.rotate_left_until_detected(speed)
+def turn_left(slow_end = False):
+    robot.rotate_left_until_detected(slow_end = slow_end)
     robot.stop()
     #robot.rotate_by_degree(degrees = -85)
 
@@ -42,11 +32,9 @@ def follow_line_until_intersection(overrun = False, overrun_short = False, fast 
         else:
             lf_speed = env.moving_speed_slow
             
-        while not found_intersection:
-            if robot.color_detected('red'):
-                found_intersection = True
-            else:
-                lf.iteration(a_speed = lf_speed)
+        while not robot.color_detected():
+            lf.iteration(a_speed = lf_speed)
+            
         if overrun:
             if overrun_short:
                 slowdown_short(speed = lf_speed)
@@ -58,11 +46,8 @@ def follow_line_until_intersection(overrun = False, overrun_short = False, fast 
 def backwards_until_intersection():
     found_intersection = False
     robot.straight_line_moving_backwards()
-    while not found_intersection:
-        if robot.color_detected(env.corner_color):
-            found_intersection = True
-        # else:
-        #     lf.iteration_backwards()
+    while not robot.color_detected():
+        pass
 
 def slowdown(speed = env.moving_speed_slow):
     #run the same distance regardless of speed
@@ -79,12 +64,11 @@ def slowdown_short(speed = env.moving_speed_slow):
     
 def get_drink(drink='A'):
     if drink == 'A':
-        turn_left(speed = env.rotation_speed_slow)
+        turn_left(slow_end = True)
     else:
-        turn_right(speed = env.rotation_speed_slow)
+        turn_right(slow_end = True)
 
 
-    #turn_left(speed = 50)
     robot.straight_line_moving_backwards(duration = 650)
     time.sleep(0.7)
     
@@ -95,9 +79,9 @@ def get_drink(drink='A'):
     robot.straight_line_moving(duration = 650)
     time.sleep(0.7)
     if drink == 'A':
-        turn_left(speed=50)
+        turn_left(slow_end = True)
     else:
-        turn_right(speed=50)
+        turn_right(slow_end = True)
 
 def stop():
 	robot.stop()
@@ -114,16 +98,16 @@ def turn(amount):
 	pass
 
 # 180 degree turn
-def turn_around(direction='right', speed = env.rotation_speed_normal):
+def turn_around(direction='right', slow_end = False):
     if (direction == 'right'):
         #robot.rotate_by_degree(degrees = 180)
         robot.rotate_by_degree(degrees = 80)
-        robot.rotate_right_until_detected(speed)
+        robot.rotate_right_until_detected(slow_end = slow_end)
         robot.stop()
     else:
         #robot.rotate_by_degree(degrees = -180)
         robot.rotate_by_degree(degrees = -80)
-        robot.rotate_left_until_detected(speed)
+        robot.rotate_left_until_detected(slow_end = slow_end)
         robot.stop()
     
 
@@ -132,7 +116,7 @@ def grab_cup():
     After reaching the cup intersection, the robot should turn around and go backwards until it reaches he intersection again,
     the robot should then pickup a cup.
     """
-    turn_around(direction='right', speed = env.rotation_speed_slow)
+    turn_around(direction='right', slow_end = True)
     #lift down a bit less so the grabber clears the stand
     robot.lift_down(position_offset = 285)
     backwards_until_intersection()

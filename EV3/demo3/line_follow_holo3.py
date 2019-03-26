@@ -34,18 +34,18 @@ class LineFollower():
         else:
             self.robot.rotate_right(speed * 100, duration = 100)
 
-    def target_sensed(self, intersectionColor = env.corner_color):
-        return self.robot.line_detected() or self.robot.color_detected(intersectionColor)
+    def target_sensed(self):
+        return self.robot.line_detected() or self.robot.color_detected()
         #return self.robot.line_detected();
 
-    def find_line(self, iterations = 3, intersectionColor = env.corner_color):
+    def find_line(self, iterations = 3):
         # If first attempt, set iteration to 3 for minor changes on a straight line
 
         # Turn one way first
         for i in range(iterations):
             while self.robot.way_blocked():
                 self.robot.stop()
-            if self.target_sensed(intersectionColor):
+            if self.target_sensed():
                 return
             self.turn(self.speed)
             time.sleep(0.1)
@@ -56,7 +56,7 @@ class LineFollower():
         for i in range(iterations * 2):
             while self.robot.way_blocked():
                 self.robot.stop()
-            if self.target_sensed(intersectionColor):
+            if self.target_sensed():
                 return
             self.turn(self.speed)
             time.sleep(0.1)
@@ -67,7 +67,7 @@ class LineFollower():
         for i in range(iterations):
             while self.robot.way_blocked():
                 self.robot.stop()
-            if self.target_sensed(intersectionColor):
+            if self.target_sensed():
                 return
             self.turn(self.speed)
             time.sleep(0.1)
@@ -76,35 +76,28 @@ class LineFollower():
         self.find_line(iterations + 2)
 
     def iteration(self, a_speed = env.moving_speed_slow):
-        if (self.robot.way_blocked()):
-            self.robot.stop()
-            return
+        # if (self.robot.way_blocked()):
+        #     self.robot.stop()
+        #     return
         
         detected_R = self.robot.line_detected_right()
         detected_M = self.robot.line_detected_middle()
         detected_L = self.robot.line_detected_left()
 
         if (not (detected_R or detected_M or detected_L)):
-            self.offline = self.offline + 1
+            #self.offline = self.offline + 1
             #print("unfind", self.offline)
             self.find_line()
-
-        # else:
-        #     print(self.robot.gy.angle)
-        #     self.robot.steer_by_degree(degrees = -self.robot.gy.angle)
         elif (detected_L):
-            self.left_adjust = self.left_adjust + 1
+            #self.left_adjust = self.left_adjust + 1
             #print("left adjust", self.left_adjust)
-            #self.robot.rotate_left(80)
             self.robot.steer_left(a_speed)
         elif (detected_R):
-            self.right_adjust = self.right_adjust + 1
+            #self.right_adjust = self.right_adjust + 1
             #print("right adjust", self.right_adjust)
-            #self.robot.rotate_right(80)
             self.robot.steer_right(a_speed)
         elif (detected_M):
             self.robot.straight_line_moving(speed=a_speed)
-
         else:
             # shouldn't be triggered
             pass
