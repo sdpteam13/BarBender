@@ -49,7 +49,8 @@ def do(st):
         else:
             stop()
 for i in range(10):
-    do(['s','c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
+    #do(['s','c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
+    do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
     pass
 
 #do(['s','c','l','s','b','f', 's','a', 'f', 'r','F','F','F','F','l','f','t','x','f','r','F','F','F'])

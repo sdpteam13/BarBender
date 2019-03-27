@@ -104,14 +104,16 @@ class Robot():
         return self.csM.reflected_light_intensity > env.light_intensity_threshold
 
     def line_detected_right(self):
-        return self.csR.value(0) > env.light_intensity_threshold
+        self.csR._value[0], value = self.csR.get_attr_int(self.csR._value[0], "value0")
+        return value > env.light_intensity_threshold
 
     def line_detected_left(self):
-        return self.csL.value(0) > env.light_intensity_threshold
+        self.csL._value[0], value = self.csL.get_attr_int(self.csL._value[0], "value0")
+        return value > env.light_intensity_threshold
     
     def line_detected_middle_special(self):
-        # https://github.com/ev3dev/ev3dev-lang-python/blob/ev3dev-stretch/ev3dev2/sensor/lego.py
-        return self.csM.value(0) > env.light_intensity_threshold
+        self.csM._value[0], value = self.csM.get_attr_int(self.csM._value[0], "value0")
+        return value > env.light_intensity_threshold
 
     def color_detected(self, c = env.corner_color):
         return self.csM.color == c
@@ -133,6 +135,19 @@ class Robot():
             self.rotate_left(speed)
             while self.gy.angle > degrees:
                 pass
+        #self.stop()
+    
+    def rotate_by_degree_special(self, target, speed = env.rotation_speed_slow):
+        # without reset_gyro
+        degrees = target - self.gy.angle
+        if (degrees > 0):
+            self.rotate_right(speed)
+            while self.gy.angle < target:
+                print(self.gy.angle)
+        else:
+            self.rotate_left(speed)
+            while self.gy.angle > target:
+                print(self.gy.angle)
         #self.stop()
 
     def rotate_left_until_detected(self, speed = env.rotation_speed_normal, slow_end = False):
@@ -195,7 +210,7 @@ class Robot():
         self.grabberLift.run_to_abs_pos(speed_sp = 300,
             position_sp = self.up_pos+position_offset,
             stop_action = 'brake')
-        time.sleep(1.7)
+        time.sleep(1.7)        
     
     def stop_grabber(self):
         self.grabberArms.stop()
