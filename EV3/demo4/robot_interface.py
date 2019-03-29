@@ -1,7 +1,7 @@
 import time
 import client_socket
-from robot_holo2 import Robot
-from line_follow_holo3 import LineFollower
+from robot import Robot
+from line_follower import LineFollower
 from environment import Environment
 
 robot = Robot()

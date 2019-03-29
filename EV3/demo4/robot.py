@@ -143,11 +143,13 @@ class Robot():
         if (degrees > 0):
             self.rotate_right(speed)
             while self.gy.angle < target:
-                print(self.gy.angle)
+                #print(self.gy.angle)
+                pass
         else:
             self.rotate_left(speed)
             while self.gy.angle > target:
-                print(self.gy.angle)
+                #print(self.gy.angle)
+                pass
         #self.stop()
 
     def rotate_left_until_detected(self, speed = env.rotation_speed_normal, slow_end = False):
