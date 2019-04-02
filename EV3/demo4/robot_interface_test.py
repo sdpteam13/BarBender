@@ -1,5 +1,5 @@
 from robot_interface import *
-
+import time
 #Test visiting the cup dispenser
 # for i in range(2):
 #     follow_line_until_intersection()
@@ -48,10 +48,20 @@ def do(st):
             get_drink('B')
         else:
             stop()
-for i in range(5):
+            
+times = []
+init_time = time.time()
+print (lf.offline)
+for i in range(30):
     #do(['c','F','F','t','x','F'])
-    do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
-    pass
+    #do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
+    start = time.time()
+    do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','l','f','t','x','f','r','F'])
+    times.append(time.time() - start)
+    
+print ("times: " + str(times))
+print ("total: " + str(time.time() - init_time))
+print ("offline: " + str(lf.offline))
 
 #do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','F','F','l','f','t','x','f','r','F','F','F'])
 #do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','l','f','t','x','f','r','F'])

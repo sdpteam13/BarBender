@@ -85,7 +85,7 @@ class LineFollower():
         detected_L = self.robot.line_detected_left()
 
         if (not (detected_R or detected_M or detected_L)):
-            #self.offline = self.offline + 1
+            self.offline = self.offline + 1
             #print("unfind", self.offline)
             self.find_line()
         elif (detected_L):

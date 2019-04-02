@@ -100,14 +100,14 @@ def get_drink(drink='A'):
         turn_right(slow_end = True)
 
 
-    robot.straight_line_moving_backwards(duration = 650)
+    robot.straight_line_moving_backwards(duration = 690)
     time.sleep(0.7)
     
     robot.beep()
     client_socket.send_and_receive(drink)
     robot.beep()
     
-    robot.straight_line_moving(duration = 650)
+    robot.straight_line_moving(duration = 690)
     time.sleep(0.7)
     if drink == 'A':
         turn_left(slow_end = True)
@@ -153,7 +153,7 @@ def grab_cup():
     robot.stop()
     
     #lift down a bit less so the grabber clears the stand
-    robot.lift_down(position_offset = 285)
+    robot.lift_down(position_offset = 285, blocking = False)
     
     backwards_moving_using_gyro(value + 180)
     
@@ -175,9 +175,9 @@ def drop_cup():
     """
     robot.lift_down()
     robot.open_grabber()
-    robot.open_grabber()
+    #robot.open_grabber()
     robot.lift_up(blocking = False)
-    robot.close_grabber(blocking = False)
+    #robot.close_grabber(blocking = False)
 
 def dance():
     for i in range(5):

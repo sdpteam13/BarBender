@@ -202,16 +202,16 @@ class Robot():
     #     self.reset_gyro()
 
     def close_grabber(self, blocking = True, long = False):
-        time_sp = 800
+        time_sp = 1000
         if long:
-            time_sp = 1000
+            time_sp = 1200
         
         self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp = time_sp)
         if blocking:
             time.sleep(time_sp/1000)
 
     def open_grabber(self):
-        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 800)
+        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 1000)
         time.sleep(0.8)
 
     def lift_up(self, blocking = True):
@@ -220,11 +220,12 @@ class Robot():
         if blocking:
             time.sleep(1.7)
 
-    def lift_down(self, position_offset = 400):
+    def lift_down(self, position_offset = 400, blocking = True):
         self.grabberLift.run_to_abs_pos(speed_sp = 300,
             position_sp = self.up_pos+position_offset,
             stop_action = 'brake')
-        time.sleep(1.7)        
+        if blocking:
+            time.sleep(1.7)        
     
     def stop_grabber(self):
         self.grabberArms.stop()
