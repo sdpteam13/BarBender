@@ -61,8 +61,8 @@ def backwards_until_intersection():
 def backwards_moving_using_gyro(value):
     while not robot.color_detected():
         diff = (robot.gy.angle - value)
-        if (diff > 4 or diff < -4):
-            robot.rotate_by_degree_special(target = value, speed = 20)
+        if (diff > 3 or diff < -3):
+            robot.rotate_by_degree_special(target = value)
             robot.stop()
         else:
             robot.straight_line_moving_backwards()
@@ -149,8 +149,7 @@ def grab_cup():
     """
     value = follow_line_with_gyro_recorded()
     forward_adjust()
-    robot.rotate_by_degree_special(target = value + 140, speed = 250)
-    robot.rotate_by_degree_special(target = value + 170, speed = 100)
+    robot.rotate_by_degree_special(target = value + 180)
     robot.stop()
     
     #lift down a bit less so the grabber clears the stand
@@ -161,7 +160,7 @@ def grab_cup():
     robot.stop()
     robot.close_grabber(long = True)
     robot.lift_up()
-    robot.straight_line_moving(duration = 1000)
+    robot.straight_line_moving(duration = 800)
     time.sleep(1)
     try:
         client_socket.send('X')

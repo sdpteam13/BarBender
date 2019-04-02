@@ -31,9 +31,17 @@ class Robot():
         print("DcMotor connected")
 
         self.grabberLift = ev3.MediumMotor('outC')
+        self.grabberLift.stop_action='brake'
+        self.grabber_initialise()
         self.gy = ev3.GyroSensor('in1')
         self.reset_gyro()
         self.up_pos = self.grabberLift.position
+    
+    def grabber_initialise(self):
+        self.grabberLift.run_forever(speed_sp=-100)
+        while not self.grabberLift.is_overloaded:
+            pass
+        self.grabberLift.stop()
 
     def reset_gyro(self):
         self.gy.mode = "GYRO-RATE"
@@ -137,20 +145,20 @@ class Robot():
                 pass
         #self.stop()
     
-    def rotate_by_degree_special(self, target, speed = env.rotation_speed_slow):
+    def rotate_by_degree_special(self, target):
         # without reset_gyro
         degrees = target - self.gy.angle
+        speed_limit = 2.5
+        #speed_adjust = speed - speed_limit
         if (degrees > 0):
-            self.rotate_right(speed)
-            while self.gy.angle < target:
-                #print(self.gy.angle)
-                pass
+            while degrees > 0:
+                self.rotate_right(speed_limit + degrees * 2.5)
+                degrees = target - self.gy.angle
+                
         else:
-            self.rotate_left(speed)
-            while self.gy.angle > target:
-                #print(self.gy.angle)
-                pass
-        #self.stop()
+            while degrees < 0:
+                self.rotate_left(speed_limit - degrees * 2.5)
+                degrees = target - self.gy.angle
 
     def rotate_left_until_detected(self, speed = env.rotation_speed_normal, slow_end = False):
         
