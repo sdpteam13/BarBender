@@ -48,7 +48,7 @@ def follow_line_with_gyro_recorded():
     iteration = 1
     value = robot.gy.angle
     while not robot.color_detected():
-        lf.iteration(a_speed = env.moving_speed_slow)
+        lf.iteration(a_speed = env.moving_speed_slow - 50)
         iteration = iteration + 1.0
         value = value + robot.gy.angle
     return value / iteration
@@ -65,7 +65,7 @@ def backwards_moving_using_gyro(value):
             robot.rotate_by_degree_special(target = value)
             robot.stop()
         else:
-            robot.straight_line_moving_backwards()
+            robot.straight_line_moving_backwards(speed = env.moving_speed_slow - 50)
 
 def backwards_adjust():
     robot.straight_line_moving_backwards(speed = 50)
@@ -87,7 +87,7 @@ def slowdown(speed = env.moving_speed_slow):
     
 def slowdown_short(speed = env.moving_speed_slow):
     #run the same distance regardless of speed
-    duration = 800 * env.moving_speed_slow / speed
+    duration = 900 * env.moving_speed_slow / speed
     robot.straight_line_moving(duration = duration, speed = speed)
     time.sleep(duration / 1000.0 - 0.15)
     
@@ -100,14 +100,15 @@ def get_drink(drink='A'):
         turn_right(slow_end = True)
 
 
-    robot.straight_line_moving_backwards(duration = 690)
+    robot.straight_line_moving_backwards(duration = 710)
     time.sleep(0.8)
     
     robot.beep()
     client_socket.send_and_receive(drink)
+    time.sleep(5)
     robot.beep()
     
-    robot.straight_line_moving(duration = 690)
+    robot.straight_line_moving(duration = 710)
     time.sleep(0.8)
     if drink == 'A':
         turn_left(slow_end = True)
@@ -160,7 +161,7 @@ def grab_cup():
     robot.stop()
     robot.close_grabber(long = True)
     robot.lift_up()
-    robot.straight_line_moving(duration = 800)
+    robot.straight_line_moving(duration = 1000)
     time.sleep(1)
     try:
         client_socket.send('X')
