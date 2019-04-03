@@ -202,16 +202,16 @@ class Robot():
     #     self.reset_gyro()
 
     def close_grabber(self, blocking = True, long = False):
-        time_sp = 1000
+        time_sp = 900
         if long:
-            time_sp = 1200
+            time_sp = 1100
         
         self.grabberArms.run_timed(duty_cycle_sp = -100, time_sp = time_sp)
         if blocking:
             time.sleep(time_sp/1000)
 
     def open_grabber(self):
-        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 1000)
+        self.grabberArms.run_timed(duty_cycle_sp = 100, time_sp = 900)
         time.sleep(0.8)
 
     def lift_up(self, blocking = True):

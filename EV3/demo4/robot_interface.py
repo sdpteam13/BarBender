@@ -87,7 +87,7 @@ def slowdown(speed = env.moving_speed_slow):
     
 def slowdown_short(speed = env.moving_speed_slow):
     #run the same distance regardless of speed
-    duration = 600 * env.moving_speed_slow / speed
+    duration = 800 * env.moving_speed_slow / speed
     robot.straight_line_moving(duration = duration, speed = speed)
     time.sleep(duration / 1000.0 - 0.15)
     
@@ -101,14 +101,14 @@ def get_drink(drink='A'):
 
 
     robot.straight_line_moving_backwards(duration = 690)
-    time.sleep(0.7)
+    time.sleep(0.8)
     
     robot.beep()
     client_socket.send_and_receive(drink)
     robot.beep()
     
     robot.straight_line_moving(duration = 690)
-    time.sleep(0.7)
+    time.sleep(0.8)
     if drink == 'A':
         turn_left(slow_end = True)
     else:
@@ -155,7 +155,7 @@ def grab_cup():
     #lift down a bit less so the grabber clears the stand
     robot.lift_down(position_offset = 285, blocking = False)
     
-    backwards_moving_using_gyro(value + 180)
+    backwards_moving_using_gyro(value + 175)
     
     robot.stop()
     robot.close_grabber(long = True)
@@ -175,9 +175,16 @@ def drop_cup():
     """
     robot.lift_down()
     robot.open_grabber()
-    #robot.open_grabber()
     robot.lift_up(blocking = False)
     #robot.close_grabber(blocking = False)
+    
+def change_gif(message):
+    try:
+        print("changing gif")
+        #client_socket.send_gif(message)
+    except:
+        print("fail")
+        pass
 
 def dance():
     for i in range(5):
