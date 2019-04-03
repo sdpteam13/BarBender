@@ -20,3 +20,12 @@ def send_and_receive(message):
     except:
         print ('[ERROR] can\'t connect to fluid dispenser')
         return ""
+    
+def send_gif(message):
+    try:
+        s = socket.socket()
+        s.connect(('192.168.105.157',55555))
+        s.send(message.encode())
+        s.close()
+    except:
+        print ('[ERROR] can\'t connect to display')

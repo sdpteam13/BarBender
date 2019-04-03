@@ -46,17 +46,24 @@ def do(st):
             get_drink('A')
         elif c == 'b':
             get_drink('B')
+        elif c == '0':
+            change_gif('0')
+        elif c == '1':
+            change_gif('1')
+        elif c == '2':
+            change_gif('2')
         else:
             stop()
             
 times = []
 init_time = time.time()
 print (lf.offline)
-for i in range(30):
+for i in range(1):
     #do(['c','F','F','t','x','F'])
     #do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
     start = time.time()
-    do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','l','f','t','x','f','r','F'])
+    #do(['2','c','l','s','b','f', 's','a', 'f', 'r','F','F','l','f','0','t','x','1','f','2','r','F'])
+    do(['2','c','l','s','b','f', 'l','F','F','F','l','f','0','t','x','1','f','2','r','F','F'])
     times.append(time.time() - start)
     
 print ("times: " + str(times))

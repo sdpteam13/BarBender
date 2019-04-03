@@ -51,6 +51,12 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
                 rob.get_drink('A')
             elif c == 'b':
                 rob.get_drink('B')
+            elif c == '0':
+                rob.change_gif('0')
+            elif c == '1':
+                rob.change_gif('1')
+            elif c == '2':
+                rob.change_gif('2')
             else:
                 rob.stop()
         requests.post('http://192.168.105.142/EV3/')
