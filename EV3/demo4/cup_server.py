@@ -33,7 +33,7 @@ class cup_dispenser:
     # calibrate, close the grabber
     def grab_reset(self):
         while not grab_sensor.is_pressed:
-            grab_motor.run_timed(duty_cycle_sp=-100, time_sp=100)
+            grab_motor.run_timed(duty_cycle_sp=100, time_sp=100)
         grab_motor.stop()
 
     # lift goes down
@@ -45,28 +45,39 @@ class cup_dispenser:
 
     # open the grabber
     def grab_open(self):
-        grab_motor.run_timed(duty_cycle_sp=100, time_sp=600)
+        grab_motor.run_timed(duty_cycle_sp=-100, time_sp=450)
         time.sleep(1)
         
     # close the grabber but pose more force in order to grab the cup
     def grab_close(self):
-        grab_motor.run_timed(duty_cycle_sp=-100, time_sp=1100)
+        grab_motor.run_timed(duty_cycle_sp=100, time_sp=1100)
         time.sleep(1.5)
-        
+
+    def grab_open_more(self):
+        grab_motor.run_timed(duty_cycle_sp=-100, time_sp=300)
+        print('a')
+        time.sleep(1)
+
+    def grab_close_more(self):
+        grab_motor.run_timed(duty_cycle_sp=100, time_sp=300)
+        print('b')
+        time.sleep(1)
+
     # lift goes up
     def lift_up(self):
-        lift_motor.run_timed(speed_sp=-450, time_sp=950)
+        lift_motor.run_timed(speed_sp=-450, time_sp=850)
         time.sleep(1)
 
     def cup_grab_fail(self):
-        grab_motor.run_timed(duty_cycle_sp=-100, time_sp=200)
-        time.sleep(.2)
+        grab_motor.run_timed(duty_cycle_sp=100, time_sp=400)
+        time.sleep(.4)
         return grab_sensor.is_pressed
     
     # grab an empty cup
     def grab_and_down(self):
         self.grab_close()
         self.lift_down()
+        #time.sleep(1)
         # grab to check if there is a cup grabbed
         if self.cup_grab_fail():
             #no cup, try again
@@ -86,7 +97,9 @@ class EchoRequestHandler(socketserver.BaseRequestHandler):
         st = data.decode('utf8')
         print(st)
         cp = cup_dispenser()
+        cp.grab_close_more()
         cp.grab_and_down()
+        cp.grab_open_more()
         return
 
 if __name__ == '__main__':
@@ -103,6 +116,7 @@ if __name__ == '__main__':
     cp = cup_dispenser()
     cp.initialise()
     cp.grab_and_down()
+    cp.grab_open_more()
 
     t = threading.Thread(target=server.serve_forever)
     t.setDaemon(True) # don't hang on exit
