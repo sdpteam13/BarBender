@@ -42,6 +42,18 @@ class Robot():
         while not self.grabberLift.is_overloaded:
             pass
         self.grabberLift.stop()
+    
+    def set_ramp_value(self, value):
+        self.motorR.ramp_down_sp = value
+        self.motorL.ramp_down_sp = value
+        self.motorR.ramp_up_sp = value
+        self.motorL.ramp_up_sp = value
+    
+    def reset_ramp_value(self):
+        self.motorR.ramp_down_sp = 0
+        self.motorL.ramp_down_sp = 0
+        self.motorR.ramp_up_sp = 0
+        self.motorL.ramp_up_sp = 0
 
     def reset_gyro(self):
         self.gy.mode = "GYRO-RATE"
@@ -61,8 +73,8 @@ class Robot():
     
     def straight_line_moving_backwards(self, speed = env.moving_speed_slow, duration = -1):
         if (duration < 0):
-            self.motorR.run_forever(speed_sp = -speed)
             self.motorL.run_forever(speed_sp = -speed)
+            self.motorR.run_forever(speed_sp = -speed)
         else:
             self.motorR.run_timed(speed_sp = -speed, time_sp = duration)
             self.motorL.run_timed(speed_sp = -speed, time_sp = duration)

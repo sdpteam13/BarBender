@@ -48,7 +48,7 @@ def follow_line_with_gyro_recorded():
     iteration = 1
     value = robot.gy.angle
     while not robot.color_detected():
-        lf.iteration(a_speed = env.moving_speed_slow - 50)
+        lf.iteration(a_speed = env.moving_speed_slow - 50, steer_rate = 0.3)
         iteration = iteration + 1.0
         value = value + robot.gy.angle
     return value / iteration
@@ -59,13 +59,38 @@ def backwards_until_intersection():
         pass
     
 def backwards_moving_using_gyro(value):
+    robot.stop()
+    time.sleep(0.5)
     while not robot.color_detected():
+        # detected_R = robot.line_detected_right()
+        # detected_L = robot.line_detected_left()
         diff = (robot.gy.angle - value)
         if (diff > 3 or diff < -3):
+            robot.stop()
+            time.sleep(0.5)
             robot.rotate_by_degree_special(target = value)
             robot.stop()
+            time.sleep(0.5)
+        # elif detected_L:
+        #     robot.motorL.run_to_rel_pos(speed_sp = 200, position_sp = 100, stop_action = 'brake')
+        #     time.sleep(2)
+        #     robot.motorR.run_to_rel_pos(speed_sp = 200, position_sp = 100, stop_action = 'brake')
+        #     time.sleep(2)
+        #     robot.motorL.run_to_rel_pos(speed_sp = 200, position_sp = -100, stop_action = 'brake')
+        #     time.sleep(2)
+        #     robot.motorR.run_to_rel_pos(speed_sp = 200, position_sp = -100, stop_action = 'brake')
+        #     time.sleep(2)
+        # elif detected_R:
+        #     robot.motorR.run_to_rel_pos(speed_sp = 200, position_sp = 100, stop_action = 'brake')
+        #     time.sleep(2)
+        #     robot.motorL.run_to_rel_pos(speed_sp = 200, position_sp = 100, stop_action = 'brake')
+        #     time.sleep(2)
+        #     robot.motorR.run_to_rel_pos(speed_sp = 200, position_sp = -100, stop_action = 'brake')
+        #     time.sleep(2)
+        #     robot.motorL.run_to_rel_pos(speed_sp = 200, position_sp = -100, stop_action = 'brake')
+        #     time.sleep(2)
         else:
-            robot.straight_line_moving_backwards(speed = env.moving_speed_slow - 50)
+            robot.straight_line_moving_backwards(speed = 100)
 
 def backwards_adjust():
     robot.straight_line_moving_backwards(speed = 50)
@@ -150,19 +175,23 @@ def grab_cup():
     """
     value = follow_line_with_gyro_recorded()
     forward_adjust()
-    robot.rotate_by_degree_special(target = value + 180)
+    robot.stop()
+    time.sleep(0.1)
+    robot.rotate_by_degree_special(target = value + 178)
     robot.stop()
     
     #lift down a bit less so the grabber clears the stand
     robot.lift_down(position_offset = 285, blocking = False)
     
-    backwards_moving_using_gyro(value + 175)
+    robot.set_ramp_value(7000)
+    backwards_moving_using_gyro(value + 178)
+    robot.reset_ramp_value()
     
     robot.stop()
     robot.close_grabber(long = True)
     robot.lift_up()
-    robot.straight_line_moving(duration = 1000)
-    time.sleep(1)
+    robot.straight_line_moving(duration = 1100)
+    time.sleep(1.2)
     try:
         client_socket.send('X')
     except:
@@ -182,7 +211,7 @@ def drop_cup():
 def change_gif(message):
     try:
         print("changing gif")
-        #client_socket.send_gif(message)
+        client_socket.send_gif(message)
     except:
         print("fail")
         pass

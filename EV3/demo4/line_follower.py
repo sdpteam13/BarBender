@@ -75,7 +75,7 @@ class LineFollower():
         # Increase search space
         self.find_line(iterations + 2)
 
-    def iteration(self, a_speed = env.moving_speed_slow):
+    def iteration(self, a_speed = env.moving_speed_slow, steer_rate = env.steer_rate_normal):
         # if (self.robot.way_blocked()):
         #     self.robot.stop()
         #     return
@@ -91,13 +91,13 @@ class LineFollower():
         elif (detected_L):
             #self.left_adjust = self.left_adjust + 1
             #print("left adjust", self.left_adjust)
-            self.robot.steer_left(a_speed)
+            self.robot.steer_left(speed = a_speed, steer_rate = steer_rate)
         elif (detected_R):
             #self.right_adjust = self.right_adjust + 1
             #print("right adjust", self.right_adjust)
-            self.robot.steer_right(a_speed)
+            self.robot.steer_right(speed = a_speed, steer_rate = steer_rate)
         elif (detected_M):
-            self.robot.straight_line_moving(speed=a_speed)
+            self.robot.straight_line_moving(speed = a_speed)
         else:
             # shouldn't be triggered
             pass

@@ -58,9 +58,9 @@ def do(st):
 times = []
 init_time = time.time()
 print (lf.offline)
-for i in range(5):
-    #do(['c','F','F','t','x','F'])
-    do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
+for i in range(1):
+    do(['c','F','F','t','x','F'])
+    #do(['c','l','s','b','f', 's','a', 'f', 'r','F','F','t','x','F'])
     start = time.time()
     #do(['2','c','l','s','b','f', 's','a', 'f', 'r','F','F','l','f','0','t','x','1','f','2','r','F'])
     #do(['2','c','l','s','b','f', 'l','F','F','F','l','f','0','t','x','1','f','2','r','F','F'])
