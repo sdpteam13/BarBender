@@ -55,12 +55,10 @@ class cup_dispenser:
 
     def grab_open_more(self):
         grab_motor.run_timed(duty_cycle_sp=-100, time_sp=300)
-        print('a')
         time.sleep(1)
 
     def grab_close_more(self):
         grab_motor.run_timed(duty_cycle_sp=100, time_sp=300)
-        print('b')
         time.sleep(1)
 
     # lift goes up
